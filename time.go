@@ -162,11 +162,8 @@ func (ti ti) Ticker(duration time.Duration, fn func()) *Ticker {
 func (ticker *Ticker) Start() {
 	ticker.ticker = time.NewTicker(ticker.duration)
 	go func() {
-		for {
-			select {
-			case <-ticker.ticker.C:
-				ticker.fn()
-			}
+		for range ticker.ticker.C {
+			ticker.fn()
 		}
 	}()
 }

@@ -13,7 +13,7 @@ package main
 import (
 	"log"
 
-	"github.com/Lemo-yxk/utils"
+	"github.com/lemoyxk/utils"
 )
 
 func main() {

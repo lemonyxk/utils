@@ -13,6 +13,8 @@ package utils
 import (
 	"bytes"
 	"fmt"
+	"reflect"
+	"unsafe"
 )
 
 type str int
@@ -77,4 +79,17 @@ func (s str) ToFloat64(v []string) []float64 {
 		res = append(res, Conv.StringToFloat64(v[i]))
 	}
 	return res
+}
+
+func (s str) BytesToString(b []byte) string {
+	return *(*string)(unsafe.Pointer(&b))
+}
+
+func (s str) StringToBytes(str string) (bs []byte) {
+	sh := (*reflect.StringHeader)(unsafe.Pointer(&str))
+	bh := (*reflect.SliceHeader)(unsafe.Pointer(&bs))
+	bh.Data = sh.Data
+	bh.Len = sh.Len
+	bh.Cap = sh.Len
+	return
 }

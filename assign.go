@@ -146,7 +146,7 @@ func doAssign(dst, src interface{}, tag string, allowZero, allowTag bool) error 
 				continue
 			}
 
-			dstValueElem.FieldByName(name).Set(srcValueElem.Field(i))
+			dstValueElem.FieldByIndex(s.Index).Set(srcValueElem.Field(i))
 		}
 	case reflect.Map:
 		var keys = srcValueElem.MapKeys()

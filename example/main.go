@@ -16,6 +16,13 @@ import (
 	"github.com/lemoyxk/utils"
 )
 
+type A struct {
+	Name string
+}
+
 func main() {
-	log.Println(utils.Addr.GetLocalhostIp())
+	// var a = A{Name: "hello"}
+	// var b = A{Name: "world"}
+	var res = utils.Extract([]interface{}{}).Field("1").String()
+	log.Println(res)
 }

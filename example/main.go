@@ -21,8 +21,10 @@ type A struct {
 }
 
 func main() {
-	var a = &A{Name: "hello"}
+	var a = A{Name: "hello"}
 	var b = A{Name: "world"}
-	var res = utils.Extract(a, b).Field("Name").String()
+	var c = []A{a, b}
+	var d = []interface{}{a, b, c}
+	var res = utils.Extract(d).Field("Name").String()
 	log.Println(res)
 }

@@ -224,16 +224,17 @@ func doExtract(src []interface{}, field string) []interface{} {
 
 	var res []interface{}
 
-	for i := 0; i < len(src); i++ {
-		var srcValue = reflect.ValueOf(src[i])
-		var srcType = reflect.TypeOf(src[i])
+	var fn func(source interface{})
+	fn = func(source interface{}) {
+		var srcValue = reflect.ValueOf(source)
+		var srcType = reflect.TypeOf(source)
 
 		var srcValueElem = srcValue
 		var srcTypeElem = srcType
 
 		if srcType.Kind() == reflect.Ptr {
 			if srcValue.IsNil() {
-				continue
+				return
 			}
 			srcValueElem = srcValue.Elem()
 			srcTypeElem = srcType.Elem()
@@ -243,7 +244,7 @@ func doExtract(src []interface{}, field string) []interface{} {
 		case reflect.Struct:
 			var s, ok = srcTypeElem.FieldByName(field)
 			if !ok {
-				continue
+				return
 			}
 			res = append(res, srcValueElem.FieldByIndex(s.Index).Interface())
 		case reflect.Map:
@@ -253,11 +254,19 @@ func doExtract(src []interface{}, field string) []interface{} {
 					continue
 				}
 				res = append(res, srcValueElem.MapIndex(keys[j]).Interface())
-				break
+				return
+			}
+		case reflect.Slice:
+			for j := 0; j < srcValueElem.Len(); j++ {
+				fn(srcValueElem.Index(j).Interface())
 			}
 		default:
 			panic("kind of src is not struct or map")
 		}
+	}
+
+	for i := 0; i < len(src); i++ {
+		fn(src[i])
 	}
 
 	return res

@@ -113,6 +113,8 @@ func do(httpClient *httpClient) *Request {
 	var body = httpClient.body
 	var cookies = httpClient.cookies
 	var progress = httpClient.progress
+	var userName = httpClient.userName
+	var passWord = httpClient.passWord
 
 	var request *http.Request
 	var response *http.Response
@@ -286,6 +288,10 @@ func do(httpClient *httpClient) *Request {
 		request.AddCookie(cookies[i])
 	}
 
+	if userName != "" || passWord != "" {
+		request.SetBasicAuth(userName, passWord)
+	}
+
 	response, err = client.Do(request)
 	if err != nil {
 		return &Request{err: err}
@@ -329,6 +335,8 @@ type httpClient struct {
 	transport   *http.Transport
 	dialer      *net.Dialer
 	progress    *progress
+	userName    string
+	passWord    string
 }
 
 type httpInfo struct {
@@ -426,6 +434,12 @@ func (h *httpInfo) Proxy(url string) *httpInfo {
 
 func (h *httpInfo) KeepAlive(keepalive time.Duration) *httpInfo {
 	h.handler.dialer.KeepAlive = keepalive
+	return h
+}
+
+func (h *httpInfo) SetBasicAuth(userName, passWord string) *httpInfo {
+	h.handler.userName = userName
+	h.handler.passWord = passWord
 	return h
 }
 

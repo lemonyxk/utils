@@ -4,7 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c4b46528-e875-4fcd-b40b-98a2ea3a0b05" name="Default Changelist" comment="" />
+    <list default="true" id="c4b46528-e875-4fcd-b40b-98a2ea3a0b05" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -94,10 +98,14 @@
       <screen x="0" y="23" width="1680" height="978" />
     </state>
     <state x="593" y="451" key="#GOROOT/0.23.1680.978@0.23.1680.978" timestamp="1594444034468" />
-    <state x="379" y="93" key="CommitChangelistDialog2" timestamp="1600150029917">
+    <state x="379" y="93" key="CommitChangelistDialog2" timestamp="1600439620411">
       <screen x="0" y="23" width="1680" height="978" />
     </state>
-    <state x="379" y="93" key="CommitChangelistDialog2/0.23.1680.978@0.23.1680.978" timestamp="1600150029917" />
+    <state x="379" y="93" key="CommitChangelistDialog2/0.23.1680.978@0.23.1680.978" timestamp="1600439620411" />
+    <state x="168" y="110" key="DiffContextDialog" timestamp="1600439642455">
+      <screen x="0" y="23" width="1680" height="978" />
+    </state>
+    <state x="168" y="110" key="DiffContextDialog/0.23.1680.978@0.23.1680.978" timestamp="1600439642455" />
     <state x="722" y="378" key="EnvironmentVariablesDialog" timestamp="1594444050009">
       <screen x="0" y="23" width="1680" height="978" />
     </state>
@@ -126,10 +134,10 @@
       <screen x="0" y="23" width="1680" height="978" />
     </state>
     <state x="371" y="151" key="SettingsEditor/0.23.1680.978@0.23.1680.978" timestamp="1594444052488" />
-    <state x="440" y="253" key="Vcs.Push.Dialog.v2" timestamp="1600150031206">
+    <state x="440" y="253" key="Vcs.Push.Dialog.v2" timestamp="1600439643043">
       <screen x="0" y="23" width="1680" height="978" />
     </state>
-    <state x="440" y="253" key="Vcs.Push.Dialog.v2/0.23.1680.978@0.23.1680.978" timestamp="1600150031206" />
+    <state x="440" y="253" key="Vcs.Push.Dialog.v2/0.23.1680.978@0.23.1680.978" timestamp="1600439643043" />
     <state x="522" y="237" width="635" height="550" key="find.popup" timestamp="1594923275005">
       <screen x="0" y="23" width="1680" height="978" />
     </state>

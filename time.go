@@ -146,12 +146,12 @@ func (ti ti) Timestamp(timestamp int64) Date {
 }
 
 func (ti ti) String(dateString string) Date {
-	var t, _ = time.Parse(FULL, dateString)
+	var t, _ = time.ParseInLocation(FULL, dateString, time.Local)
 	return Date{time: t}
 }
 
 func (ti ti) FormatString(format string, dateString string) Date {
-	var t, _ = time.Parse(format, dateString)
+	var t, _ = time.ParseInLocation(format, dateString, time.Local)
 	return Date{time: t}
 }
 

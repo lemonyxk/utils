@@ -232,6 +232,10 @@ func doExtract(src []interface{}, field string) []interface{} {
 		var srcValueElem = srcValue
 		var srcTypeElem = srcType
 
+		if !srcValueElem.IsValid() {
+			return
+		}
+
 		if srcType.Kind() == reflect.Ptr {
 			if srcValue.IsNil() {
 				return
@@ -246,19 +250,34 @@ func doExtract(src []interface{}, field string) []interface{} {
 			if !ok {
 				return
 			}
-			res = append(res, srcValueElem.FieldByIndex(s.Index).Interface())
+			var v = srcValueElem.FieldByIndex(s.Index)
+			if !v.IsValid() {
+				res = append(res, nil)
+				return
+			}
+			res = append(res, v.Interface())
 		case reflect.Map:
 			var keys = srcValueElem.MapKeys()
 			for j := 0; j < len(keys); j++ {
 				if keys[j].String() != field {
 					continue
 				}
-				res = append(res, srcValueElem.MapIndex(keys[j]).Interface())
+				var v = srcValueElem.MapIndex(keys[j])
+				if !v.IsValid() {
+					res = append(res, nil)
+					return
+				}
+				res = append(res, v.Interface())
 				return
 			}
 		case reflect.Slice:
 			for j := 0; j < srcValueElem.Len(); j++ {
-				fn(srcValueElem.Index(j).Interface())
+				var v = srcValueElem.Index(j)
+				if !v.IsValid() {
+					fn(nil)
+					return
+				}
+				fn(v.Interface())
 			}
 		default:
 			panic("kind of src is not struct or map")

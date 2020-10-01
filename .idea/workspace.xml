@@ -6,9 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="c4b46528-e875-4fcd-b40b-98a2ea3a0b05" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/time.go" beforeDir="false" afterPath="$PROJECT_DIR$/time.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assign.go" beforeDir="false" afterPath="$PROJECT_DIR$/assign.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/example/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/extract.go" beforeDir="false" afterPath="$PROJECT_DIR$/extract.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/struct.go" beforeDir="false" afterPath="$PROJECT_DIR$/struct.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,7 +35,6 @@
   </component>
   <component name="PropertiesComponent">
     <property name="DefaultGoTemplateProperty" value="Go File" />
-    <property name="GO_FMT" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="go.import.settings.migrated" value="true" />
@@ -84,7 +84,8 @@
     <MESSAGE value="1.init." />
     <MESSAGE value="1.add extract." />
     <MESSAGE value="1.add SetBasicAuth." />
-    <option name="LAST_COMMIT_MESSAGE" value="1.add SetBasicAuth." />
+    <MESSAGE value="1.add time.Local" />
+    <option name="LAST_COMMIT_MESSAGE" value="1.add time.Local" />
   </component>
   <component name="VgoProject">
     <integration-enabled>true</integration-enabled>
@@ -99,10 +100,10 @@
       <screen x="0" y="23" width="1680" height="978" />
     </state>
     <state x="593" y="451" key="#GOROOT/0.23.1680.978@0.23.1680.978" timestamp="1594444034468" />
-    <state x="379" y="93" key="CommitChangelistDialog2" timestamp="1600439671180">
+    <state x="379" y="93" key="CommitChangelistDialog2" timestamp="1601037463079">
       <screen x="0" y="23" width="1680" height="978" />
     </state>
-    <state x="379" y="93" key="CommitChangelistDialog2/0.23.1680.978@0.23.1680.978" timestamp="1600439671180" />
+    <state x="379" y="93" key="CommitChangelistDialog2/0.23.1680.978@0.23.1680.978" timestamp="1601037463079" />
     <state x="168" y="110" key="DiffContextDialog" timestamp="1600439667564">
       <screen x="0" y="23" width="1680" height="978" />
     </state>
@@ -115,33 +116,33 @@
       <screen x="0" y="23" width="1680" height="978" />
     </state>
     <state x="651" y="451" key="Github.Dialog.Accounts.Choose/0.23.1680.978@0.23.1680.978" timestamp="1594617762463" />
-    <state width="1113" height="271" key="GridCell.Tab.0.bottom" timestamp="1600439685721">
+    <state width="1113" height="271" key="GridCell.Tab.0.bottom" timestamp="1601579443201">
       <screen x="0" y="23" width="1680" height="978" />
     </state>
-    <state width="1113" height="271" key="GridCell.Tab.0.bottom/0.23.1680.978@0.23.1680.978" timestamp="1600439685721" />
-    <state width="1113" height="271" key="GridCell.Tab.0.center" timestamp="1600439685721">
+    <state width="1113" height="271" key="GridCell.Tab.0.bottom/0.23.1680.978@0.23.1680.978" timestamp="1601579443201" />
+    <state width="1113" height="271" key="GridCell.Tab.0.center" timestamp="1601579443200">
       <screen x="0" y="23" width="1680" height="978" />
     </state>
-    <state width="1113" height="271" key="GridCell.Tab.0.center/0.23.1680.978@0.23.1680.978" timestamp="1600439685721" />
-    <state width="1113" height="271" key="GridCell.Tab.0.left" timestamp="1600439685720">
+    <state width="1113" height="271" key="GridCell.Tab.0.center/0.23.1680.978@0.23.1680.978" timestamp="1601579443200" />
+    <state width="1113" height="271" key="GridCell.Tab.0.left" timestamp="1601579443200">
       <screen x="0" y="23" width="1680" height="978" />
     </state>
-    <state width="1113" height="271" key="GridCell.Tab.0.left/0.23.1680.978@0.23.1680.978" timestamp="1600439685720" />
-    <state width="1113" height="271" key="GridCell.Tab.0.right" timestamp="1600439685721">
+    <state width="1113" height="271" key="GridCell.Tab.0.left/0.23.1680.978@0.23.1680.978" timestamp="1601579443200" />
+    <state width="1113" height="271" key="GridCell.Tab.0.right" timestamp="1601579443200">
       <screen x="0" y="23" width="1680" height="978" />
     </state>
-    <state width="1113" height="271" key="GridCell.Tab.0.right/0.23.1680.978@0.23.1680.978" timestamp="1600439685721" />
+    <state width="1113" height="271" key="GridCell.Tab.0.right/0.23.1680.978@0.23.1680.978" timestamp="1601579443200" />
     <state x="371" y="151" key="SettingsEditor" timestamp="1594444052488">
       <screen x="0" y="23" width="1680" height="978" />
     </state>
     <state x="371" y="151" key="SettingsEditor/0.23.1680.978@0.23.1680.978" timestamp="1594444052488" />
-    <state x="440" y="253" key="Vcs.Push.Dialog.v2" timestamp="1600439672480">
+    <state x="440" y="253" key="Vcs.Push.Dialog.v2" timestamp="1601037464665">
       <screen x="0" y="23" width="1680" height="978" />
     </state>
-    <state x="440" y="253" key="Vcs.Push.Dialog.v2/0.23.1680.978@0.23.1680.978" timestamp="1600439672480" />
-    <state x="522" y="237" width="635" height="550" key="find.popup" timestamp="1601037409353">
+    <state x="440" y="253" key="Vcs.Push.Dialog.v2/0.23.1680.978@0.23.1680.978" timestamp="1601037464665" />
+    <state x="522" y="237" width="635" height="550" key="find.popup" timestamp="1601578842636">
       <screen x="0" y="23" width="1680" height="978" />
     </state>
-    <state x="522" y="237" width="635" height="550" key="find.popup/0.23.1680.978@0.23.1680.978" timestamp="1601037409353" />
+    <state x="522" y="237" width="635" height="550" key="find.popup/0.23.1680.978@0.23.1680.978" timestamp="1601578842636" />
   </component>
 </project>

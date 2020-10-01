@@ -159,6 +159,10 @@ func doAssign(dst, src interface{}, tag string, allowZero, allowTag bool) error 
 			var name = keys[i]
 			var t = srcValueElem.MapIndex(name)
 
+			if !t.IsValid() {
+				continue
+			}
+
 			if !allowZero {
 				if t.IsZero() {
 					continue

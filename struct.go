@@ -41,7 +41,12 @@ func (d structure) StructToMap(input interface{}) map[string]interface{} {
 	}
 
 	for i := 0; i < kf.NumField(); i++ {
-		output[kf.Field(i).Tag.Get("json")] = vf.Field(i).Interface()
+		var v = vf.Field(i)
+		if !v.IsValid() {
+			output[kf.Field(i).Tag.Get("json")] = nil
+			continue
+		}
+		output[kf.Field(i).Tag.Get("json")] = v.Interface()
 	}
 
 	return output

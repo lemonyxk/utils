@@ -200,7 +200,10 @@ func do(httpClient *httpClient) *Request {
 			}
 
 			var b = buff.Bytes()
-			request, err = http.NewRequest(method, url, bytes.NewReader(b[:len(b)-1]))
+			if len(b) != 0 {
+				b = b[:len(b)-1]
+			}
+			request, err = http.NewRequest(method, url, bytes.NewReader(b))
 			if err != nil {
 				return &Request{err: err}
 			}

@@ -150,7 +150,11 @@ func do(httpClient *httpClient) *Request {
 			}
 		}
 
-		Url.RawQuery = Url.RawQuery + "&" + params.Encode()
+		var pStr = params.Encode()
+
+		if pStr != "" {
+			Url.RawQuery = Url.RawQuery + "&" + pStr
+		}
 
 		request, err = http.NewRequest(method, Url.String(), nil)
 		if err != nil {

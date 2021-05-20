@@ -27,7 +27,7 @@ type proc struct {
 	Cmd *cmd
 }
 
-var mux sync.Mutex
+var pMux sync.Mutex
 
 var worker []*proc
 
@@ -42,7 +42,7 @@ func (p pro) Fork(fn func(), number int) {
 		managerPid = os.Getpid()
 		_ = os.Setenv("FORK_CHILD", "TRUE")
 		workerNumber = number
-		run()
+		p.run()
 	default:
 		go fn()
 		Signal.ListenKill().Done(func(sig os.Signal) {
@@ -51,8 +51,9 @@ func (p pro) Fork(fn func(), number int) {
 	}
 }
 
-func run() {
-	mux.Lock()
+func (p pro) run() {
+	pMux.Lock()
+	defer pMux.Unlock()
 	for i := 0; i < workerNumber; i++ {
 		var c = Cmd.New(strings.Join(os.Args, " "))
 		err := c.c.Start()
@@ -62,21 +63,20 @@ func run() {
 		go func() { _, _ = c.c.Process.Wait() }()
 		worker = append(worker, &proc{Cmd: c})
 	}
-	mux.Unlock()
 }
 
 func (p pro) Kill(pid int) {
+	pMux.Lock()
+	defer pMux.Unlock()
 	if managerPid == 0 {
 		return
 	}
-	mux.Lock()
 	_ = Signal.KillGroup(pid, syscall.SIGTERM)
 	for i := 0; i < len(worker); i++ {
 		if worker[i].Cmd.c.Process.Pid == pid {
 			worker = append(worker[0:i], worker[i+1:]...)
 		}
 	}
-	mux.Unlock()
 }
 
 func (p pro) Reload() {
@@ -86,7 +86,7 @@ func (p pro) Reload() {
 	for _, proc := range worker {
 		p.Kill(proc.Cmd.c.Process.Pid)
 	}
-	run()
+	p.run()
 }
 
 func (p pro) Manager() int {

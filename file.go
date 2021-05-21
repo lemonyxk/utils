@@ -22,62 +22,67 @@ type fi int
 
 const File fi = iota
 
-type Info struct {
+type fileInfo struct {
 	bytes []byte
 	err   error
 }
 
-func (fi fi) ReadFromBytes(bts []byte) Info {
-	return Info{err: nil, bytes: bts}
+func (fi fi) IsExist(path string) bool {
+	_, err := os.Stat(path)
+	return !os.IsNotExist(err)
 }
 
-func (fi fi) ReadFromString(str string) Info {
-	return Info{err: nil, bytes: []byte(str)}
+func (fi fi) ReadFromBytes(bts []byte) fileInfo {
+	return fileInfo{err: nil, bytes: bts}
 }
 
-func (fi fi) ReadFromReader(r io.Reader) Info {
+func (fi fi) ReadFromString(str string) fileInfo {
+	return fileInfo{err: nil, bytes: []byte(str)}
+}
+
+func (fi fi) ReadFromReader(r io.Reader) fileInfo {
 	b, err := ioutil.ReadAll(r)
 	if err != nil {
-		return Info{err: err, bytes: nil}
+		return fileInfo{err: err, bytes: nil}
 	}
-	return Info{err: nil, bytes: b}
+	return fileInfo{err: nil, bytes: b}
 }
 
-func (fi fi) ReadFromPath(path string) Info {
+func (fi fi) ReadFromPath(path string) fileInfo {
 	absPath, err := filepath.Abs(path)
 	if err != nil {
-		return Info{err: err, bytes: nil}
+		return fileInfo{err: err, bytes: nil}
 	}
 	b, err := ioutil.ReadFile(absPath)
 	if err != nil {
-		return Info{err: err, bytes: nil}
+		return fileInfo{err: err, bytes: nil}
 	}
-	return Info{err: nil, bytes: b}
+	return fileInfo{err: nil, bytes: b}
 }
 
-func (i Info) LastError() error {
+func (i fileInfo) LastError() error {
 	return i.err
 }
 
-func (i Info) Bytes() []byte {
+func (i fileInfo) Bytes() []byte {
 	return i.bytes
 }
 
-func (i Info) Append(bts []byte) Info {
+func (i fileInfo) Append(bts []byte) fileInfo {
 	i.bytes = append(i.bytes, bts...)
 	return i
 }
 
-func (i Info) Slice(start int, end int) Info {
+func (i fileInfo) Slice(start int, end int) fileInfo {
 	i.bytes = i.bytes[start:end]
 	return i
 }
 
-func (i Info) String() string {
+func (i fileInfo) String() string {
 	return string(i.bytes)
 }
 
-func (i Info) WriteToPath(path string) error {
+func (i fileInfo) WriteToPath(path string) error {
 	absPath, err := filepath.Abs(path)
 	if err != nil {
 		return err
@@ -97,7 +102,7 @@ func (i Info) WriteToPath(path string) error {
 	return nil
 }
 
-func (i Info) WriteToReader(w io.Writer) error {
+func (i fileInfo) WriteToReader(w io.Writer) error {
 	_, err := io.Copy(w, bytes.NewReader(i.bytes))
 	if err != nil {
 		return err
@@ -105,7 +110,7 @@ func (i Info) WriteToReader(w io.Writer) error {
 	return nil
 }
 
-func (i Info) WriteToBytes(bts []byte) error {
+func (i fileInfo) WriteToBytes(bts []byte) error {
 	if len(bts) <= len(i.bytes) {
 		copy(bts, i.bytes)
 		return nil

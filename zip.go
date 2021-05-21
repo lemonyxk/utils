@@ -56,19 +56,23 @@ func (z unzipReader) To(dst string) error {
 		return err
 	}
 
-	_ = os.MkdirAll(absPath, 0755)
+	_, err = os.Stat(absPath)
+	if os.IsNotExist(err) {
+		err = os.MkdirAll(absPath, 0755)
+		if err != nil {
+			return err
+		}
+	}
 
 	cf, err := zip2.NewReader(z.src, z.len)
 	if err != nil {
 		return err
 	}
 
-	return doUnzip(&zip2.ReadCloser{
-		Reader: *cf,
-	}, absPath)
+	return doUnzip(&zip2.ReadCloser{Reader: *cf}, absPath)
 }
 
-// need a dir
+// To need a dir
 func (z unzipFile) To(dst string) error {
 
 	var absPath, err = filepath.Abs(dst)
@@ -76,7 +80,13 @@ func (z unzipFile) To(dst string) error {
 		return err
 	}
 
-	_ = os.MkdirAll(absPath, 0755)
+	_, err = os.Stat(absPath)
+	if os.IsNotExist(err) {
+		err = os.MkdirAll(absPath, 0755)
+		if err != nil {
+			return err
+		}
+	}
 
 	cf, err := zip2.OpenReader(z.src)
 	if err != nil {
@@ -124,7 +134,7 @@ type zipFile struct {
 	err error
 }
 
-// to zip
+// ZipFromDir to zip
 func (z zip) ZipFromDir(src string) zipDir {
 	var absPath, err = filepath.Abs(src)
 	return zipDir{src: absPath, err: err}
@@ -135,7 +145,7 @@ func (z zip) ZipFromFile(src string) zipFile {
 	return zipFile{src: absPath, err: err}
 }
 
-// need a file
+// To need a file
 func (z zipDir) To(dst string) error {
 
 	var absPath, err = filepath.Abs(dst)
@@ -143,7 +153,13 @@ func (z zipDir) To(dst string) error {
 		return err
 	}
 
-	_ = os.MkdirAll(filepath.Dir(absPath), 0755)
+	_, err = os.Stat(filepath.Dir(absPath))
+	if os.IsNotExist(err) {
+		err = os.MkdirAll(filepath.Dir(absPath), 0755)
+		if err != nil {
+			return err
+		}
+	}
 
 	if _, err := os.Stat(filepath.Join(z.src, filepath.Base(absPath))); err == nil {
 		return errors.New(absPath + " is exists")
@@ -190,7 +206,13 @@ func (z zipFile) To(dst string) error {
 		return err
 	}
 
-	_ = os.MkdirAll(filepath.Dir(absPath), 0755)
+	_, err = os.Stat(filepath.Dir(absPath))
+	if os.IsNotExist(err) {
+		err = os.MkdirAll(filepath.Dir(absPath), 0755)
+		if err != nil {
+			return err
+		}
+	}
 
 	fStat, err := os.Stat(z.src)
 	if err != nil {

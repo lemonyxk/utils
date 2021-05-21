@@ -42,26 +42,26 @@ func (d dir) Create(perm os.FileMode) error {
 	return os.Mkdir(d.path, perm)
 }
 
-func (d dir) Exists() bool {
+func (d dir) IsExist() bool {
 	_, err := os.Stat(d.path)
-	return err == nil
+	return !os.IsNotExist(err)
 }
 
 func (d dir) LastError() error {
 	return d.err
 }
 
-func (d dir) ReadAll() []fileInfo {
+func (d dir) ReadAll() []dirInfo {
 
-	var res []fileInfo
+	var res []dirInfo
 
-	var fn func(path string, res *[]fileInfo)
+	var fn func(path string, res *[]dirInfo)
 
-	fn = func(path string, res *[]fileInfo) {
+	fn = func(path string, res *[]dirInfo) {
 
 		files, err := ioutil.ReadDir(path)
 		if err != nil {
-			*res = append(*res, fileInfo{path, nil, err})
+			*res = append(*res, dirInfo{path, nil, err})
 			return
 		}
 
@@ -70,7 +70,7 @@ func (d dir) ReadAll() []fileInfo {
 			if files[i].IsDir() {
 				fn(fullPath, res)
 			}
-			*res = append(*res, fileInfo{fullPath, files[i], nil})
+			*res = append(*res, dirInfo{fullPath, files[i], nil})
 		}
 	}
 
@@ -80,11 +80,11 @@ func (d dir) ReadAll() []fileInfo {
 
 }
 
-func (d dir) Walk() chan fileInfo {
-	var ch = make(chan fileInfo)
+func (d dir) Walk() chan dirInfo {
+	var ch = make(chan dirInfo)
 	go func() {
 		_ = filepath.Walk(d.path, func(path string, info os.FileInfo, err error) error {
-			ch <- fileInfo{path, info, err}
+			ch <- dirInfo{path, info, err}
 			return err
 		})
 		close(ch)
@@ -92,20 +92,20 @@ func (d dir) Walk() chan fileInfo {
 	return ch
 }
 
-type fileInfo struct {
+type dirInfo struct {
 	path string
 	info os.FileInfo
 	err  error
 }
 
-func (f *fileInfo) LastError() error {
+func (f *dirInfo) LastError() error {
 	return f.err
 }
 
-func (f *fileInfo) Info() os.FileInfo {
+func (f *dirInfo) Info() os.FileInfo {
 	return f.info
 }
 
-func (f *fileInfo) Path() string {
+func (f *dirInfo) Path() string {
 	return f.path
 }

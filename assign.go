@@ -16,6 +16,10 @@ import (
 	"reflect"
 )
 
+type ass int
+
+const Assign ass = iota
+
 type destination struct {
 	dst       interface{}
 	src       interface{}
@@ -33,7 +37,7 @@ type source struct {
 	data *destination
 }
 
-func Struct(dst interface{}) *destination {
+func (a ass) Dest(dst interface{}) *destination {
 	return &destination{
 		dst:       dst,
 		src:       nil,
@@ -46,6 +50,10 @@ func Struct(dst interface{}) *destination {
 func (d *destination) Src(src interface{}) *source {
 	d.src = src
 	return &source{data: d}
+}
+
+func (d *destination) Field(name string) *field {
+	return &field{data: d, name: name}
 }
 
 func (s *source) Do() error {
@@ -66,10 +74,6 @@ func (s *source) AllowTag() *source {
 func (s *source) SetTag(tag string) *source {
 	s.data.tag = tag
 	return s
-}
-
-func (d *destination) Field(name string) *field {
-	return &field{data: d, name: name}
 }
 
 func (f *field) Set(v interface{}) error {

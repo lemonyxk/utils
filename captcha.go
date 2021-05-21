@@ -256,7 +256,7 @@ var font = [][]byte{
 }
 
 // Image struct
-type Image struct {
+type img struct {
 	*image.Paletted
 	numWidth  int
 	numHeight int
@@ -300,9 +300,9 @@ func randomPalette() color.Palette {
 
 // New returns a new captcha image of the given width and height with the
 // given digits, where each digit must be in range 0-9.
-func (captcha captcha) New(width, height int) *Image {
+func (captcha captcha) New(width, height int) *img {
 	digits := randomNumber(4)
-	m := new(Image)
+	m := new(img)
 	m.digits = digits
 	m.Paletted = image.NewPaletted(image.Rect(0, 0, width, height), randomPalette())
 	m.calculateSizes(width, height, len(digits))
@@ -329,7 +329,7 @@ func (captcha captcha) New(width, height int) *Image {
 	return m
 }
 
-func (m *Image) Digits() string {
+func (m *img) Digits() string {
 	var buf bytes.Buffer
 	for i := 0; i < len(m.digits); i++ {
 		buf.WriteString(strconv.Itoa(int(m.digits[i])))
@@ -339,7 +339,7 @@ func (m *Image) Digits() string {
 
 // ToPNG encodes an image to PNG and returns
 // the res as a byte slice.
-func (m *Image) ToPNG() []byte {
+func (m *img) ToPNG() []byte {
 	var buf bytes.Buffer
 	if err := png.Encode(&buf, m.Paletted); err != nil {
 		panic(err.Error())
@@ -347,7 +347,7 @@ func (m *Image) ToPNG() []byte {
 	return buf.Bytes()
 }
 
-func (m *Image) ToBase64() []byte {
+func (m *img) ToBase64() []byte {
 	var src = m.ToPNG()
 	buf := make([]byte, base64.StdEncoding.EncodedLen(len(src)))
 	base64.StdEncoding.Encode(buf, src)
@@ -355,12 +355,12 @@ func (m *Image) ToBase64() []byte {
 }
 
 // Write writes captcha image in PNG format into the given writer.
-func (m *Image) Write(w io.Writer) (int64, error) {
+func (m *img) Write(w io.Writer) (int64, error) {
 	n, err := w.Write(m.ToPNG())
 	return int64(n), err
 }
 
-func (m *Image) calculateSizes(width, height, nCount int) {
+func (m *img) calculateSizes(width, height, nCount int) {
 	// Goal: fit all digits inside the image.
 	var border int
 	if width > height {
@@ -397,13 +397,13 @@ func (m *Image) calculateSizes(width, height, nCount int) {
 	m.numHeight = int(nh)
 }
 
-func (m *Image) drawHorizLine(fromX, toX, y int, colorIdx uint8) {
+func (m *img) drawHorizLine(fromX, toX, y int, colorIdx uint8) {
 	for x := fromX; x <= toX; x++ {
 		m.SetColorIndex(x, y, colorIdx)
 	}
 }
 
-func (m *Image) drawCircle(x, y, radius int, colorIdx uint8) {
+func (m *img) drawCircle(x, y, radius int, colorIdx uint8) {
 	f := 1 - radius
 	dfx := 1
 	dfy := -2 * radius
@@ -430,7 +430,7 @@ func (m *Image) drawCircle(x, y, radius int, colorIdx uint8) {
 	}
 }
 
-func (m *Image) fillWithCircles(n, maxRadius int) {
+func (m *img) fillWithCircles(n, maxRadius int) {
 	maxX := m.Bounds().Max.X
 	maxY := m.Bounds().Max.Y
 	for i := 0; i < n; i++ {
@@ -440,7 +440,7 @@ func (m *Image) fillWithCircles(n, maxRadius int) {
 	}
 }
 
-func (m *Image) drawDigit(digit []byte, x, y int) {
+func (m *img) drawDigit(digit []byte, x, y int) {
 	skf := randFloat(-maxSkew, maxSkew)
 	xs := float64(x)
 	r := m.dotSize / 2
@@ -457,7 +457,7 @@ func (m *Image) drawDigit(digit []byte, x, y int) {
 	}
 }
 
-func (m *Image) distort(amp float64, period float64) {
+func (m *img) distort(amp float64, period float64) {
 	w := m.Bounds().Max.X
 	h := m.Bounds().Max.Y
 

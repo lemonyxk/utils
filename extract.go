@@ -16,6 +16,10 @@ import (
 	"strconv"
 )
 
+type ex int
+
+const Extract ex = iota
+
 type meta struct {
 	src []interface{}
 }
@@ -25,7 +29,7 @@ type extract struct {
 	field string
 }
 
-func Extract(src ...interface{}) *meta {
+func (e ex) Src(src ...interface{}) *meta {
 	return &meta{src: src}
 }
 

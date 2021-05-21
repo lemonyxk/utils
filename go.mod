@@ -1,8 +1,8 @@
 module github.com/lemoyxk/utils
 
-go 1.15
+go 1.16
 
 require (
-	github.com/json-iterator/go v1.1.10
-	github.com/mitchellh/mapstructure v1.3.3
+	github.com/json-iterator/go v1.1.11
+	github.com/mitchellh/mapstructure v1.4.1
 )

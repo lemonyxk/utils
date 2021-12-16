@@ -30,6 +30,7 @@ const minute = 5
 const second = 6
 
 type date struct {
+	err  error
 	time time.Time
 }
 
@@ -74,6 +75,10 @@ func (d date) Month() timeInfo {
 
 func (d date) Year() timeInfo {
 	return timeInfo{time: d.time, flag: year}
+}
+
+func (d date) LastError() error {
+	return d.err
 }
 
 func (t timeInfo) Get() int {
@@ -146,13 +151,13 @@ func (ti ti) Timestamp(timestamp int64) date {
 }
 
 func (ti ti) String(format, dateString string) date {
-	var t, _ = time.ParseInLocation(format, dateString, time.Local)
-	return date{time: t}
+	var t, err = time.ParseInLocation(format, dateString, time.Local)
+	return date{time: t, err: err}
 }
 
 func (ti ti) FullString(dateString string) date {
-	var t, _ = time.ParseInLocation(full, dateString, time.Local)
-	return date{time: t}
+	var t, err = time.ParseInLocation(full, dateString, time.Local)
+	return date{time: t, err: err}
 }
 
 func (ti ti) Ticker(duration time.Duration, fn func()) *tickerInfo {

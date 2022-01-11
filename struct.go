@@ -55,3 +55,30 @@ func (d structure) StructToMap(input interface{}) map[string]interface{} {
 func (d structure) MapToStruct(input interface{}, output interface{}) error {
 	return mapstructure.WeakDecode(input, output)
 }
+
+func (d structure) GetTags(src interface{}) []string {
+	if src == nil {
+		return []string{}
+	}
+
+	var kf = reflect.TypeOf(src)
+	if kf.Kind() == reflect.Ptr {
+		kf = kf.Elem()
+	}
+
+	if kf.Kind() != reflect.Struct {
+		return []string{}
+	}
+
+	var res []string
+
+	for i := 0; i < kf.NumField(); i++ {
+		var tag = kf.Field(i).Tag.Get("json")
+		if tag == "" {
+			tag = kf.Field(i).Name
+		}
+		res = append(res, tag)
+	}
+
+	return res
+}

@@ -17,7 +17,7 @@ import (
 )
 
 type A struct {
-	Name string
+	Name string `json:"name"`
 }
 
 func main() {
@@ -27,4 +27,6 @@ func main() {
 	var d = []interface{}{a, b, c}
 	var res = utils.Extract.Src(d).Field("Name").String()
 	log.Println(res)
+
+	log.Println(utils.Structure.GetTags(A{}))
 }

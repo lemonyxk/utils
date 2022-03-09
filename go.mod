@@ -1,4 +1,4 @@
-module github.com/lemoyxk/utils
+module github.com/lemoyxk/utils/v1
 
 go 1.17
 

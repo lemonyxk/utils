@@ -21,8 +21,8 @@ type ass int
 const Assign ass = iota
 
 type destination struct {
-	dst       interface{}
-	src       interface{}
+	dst       any
+	src       any
 	tag       string
 	allowZero bool
 	allowTag  bool
@@ -38,7 +38,7 @@ type source struct {
 	data *destination
 }
 
-func (a ass) Dest(dst interface{}) *destination {
+func (a ass) Dest(dst any) *destination {
 	return &destination{
 		dst:       dst,
 		src:       nil,
@@ -49,7 +49,7 @@ func (a ass) Dest(dst interface{}) *destination {
 	}
 }
 
-func (d *destination) Src(src interface{}) *source {
+func (d *destination) Src(src any) *source {
 	d.src = src
 	return &source{data: d}
 }
@@ -83,9 +83,9 @@ func (s *source) SetTag(tag string) *source {
 	return s
 }
 
-func (f *field) Set(v interface{}) error {
+func (f *field) Set(v any) error {
 	var d = f.data
-	d.src = map[string]interface{}{f.name: v}
+	d.src = map[string]any{f.name: v}
 	d.allowZero = true
 	return doAssign(d.dst, d.src, d.tag, d.allowZero, d.allowTag, d.allowWeak)
 }
@@ -100,7 +100,7 @@ func (f *field) SetTag(tag string) *field {
 	return f
 }
 
-func doAssign(dst, src interface{}, tag string, allowZero, allowTag bool, allowWeak bool) error {
+func doAssign(dst, src any, tag string, allowZero, allowTag bool, allowWeak bool) error {
 
 	var dstValue = reflect.ValueOf(dst)
 	var srcValue = reflect.ValueOf(src)

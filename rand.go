@@ -23,7 +23,7 @@ type rd int
 
 const Rand rd = iota
 
-// [begin,end)
+// RandomIntn [begin,end)
 func (r rd) RandomIntn(start int, end int) int {
 	if start == end {
 		return start
@@ -35,7 +35,7 @@ func (r rd) RandomIntn(start int, end int) int {
 	return start + ra.Intn(end-start)
 }
 
-// [begin,end)
+// RandomFloat64n [begin,end)
 func (r rd) RandomFloat64n(start float64, end float64) float64 {
 	if start == end {
 		return start

@@ -21,7 +21,7 @@ type str int
 
 const String str = iota
 
-func (s str) JoinInterface(v []interface{}, sep string) string {
+func (s str) JoinInterface(v []any, sep string) string {
 	var buf bytes.Buffer
 	for i := 0; i < len(v); i++ {
 		switch v[i].(type) {
@@ -48,7 +48,7 @@ func (s str) Join(v []string, sep string) string {
 	return buf.String()
 }
 
-func (s str) ToIntInterface(v []interface{}) []int {
+func (s str) ToIntInterface(v []any) []int {
 	var res []int
 	for i := 0; i < len(v); i++ {
 		switch v[i].(type) {

@@ -1,3 +1,4 @@
+//go:build aix || darwin || dragonfly || freebsd || linux || netbsd || openbsd || solaris
 // +build aix darwin dragonfly freebsd linux netbsd openbsd solaris
 
 /**
@@ -30,7 +31,7 @@ func (d *done) Done(fn func(sig os.Signal)) {
 	d.fn(fn)
 }
 
-// listen all signal
+// ListenAll listen all signal
 func (s sig) ListenAll() *done {
 	var signalList = []os.Signal{
 		syscall.SIGABRT, syscall.SIGALRM, syscall.SIGBUS, syscall.SIGCHLD, syscall.SIGCONT,

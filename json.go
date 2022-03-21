@@ -18,7 +18,7 @@ type json int
 
 const Json json = iota
 
-func (j json) Encode(v interface{}) []byte {
+func (j json) Encode(v any) []byte {
 	res, err := jsoniter.Marshal(v)
 	if err != nil {
 		return nil
@@ -26,11 +26,11 @@ func (j json) Encode(v interface{}) []byte {
 	return res
 }
 
-func (j json) Decode(data []byte, output interface{}) error {
+func (j json) Decode(data []byte, output any) error {
 	return jsoniter.Unmarshal(data, output)
 }
 
-type any struct {
+type anyRes struct {
 	any jsoniter.Any
 }
 
@@ -38,23 +38,23 @@ type res struct {
 	any jsoniter.Any
 }
 
-func (j json) New(v interface{}) any {
-	return any{any: jsoniter.Get(j.Encode(v))}
+func (j json) New(v any) anyRes {
+	return anyRes{any: jsoniter.Get(j.Encode(v))}
 }
 
-func (j json) Bytes(v []byte) any {
-	return any{any: jsoniter.Get(v)}
+func (j json) Bytes(v []byte) anyRes {
+	return anyRes{any: jsoniter.Get(v)}
 }
 
-func (j json) String(v string) any {
-	return any{any: jsoniter.Get([]byte(v))}
+func (j json) String(v string) anyRes {
+	return anyRes{any: jsoniter.Get([]byte(v))}
 }
 
-func (r any) Any() jsoniter.Any {
+func (r anyRes) Any() jsoniter.Any {
 	return r.any
 }
 
-func (r any) Get(path ...interface{}) res {
+func (r anyRes) Get(path ...any) res {
 	return res{any: r.any.Get(path...)}
 }
 
@@ -86,11 +86,11 @@ func (r res) Bool() bool {
 	return r.any.ToBool()
 }
 
-func (r res) Interface() interface{} {
+func (r res) Interface() any {
 	return r.any.GetInterface()
 }
 
-func (r res) Array() resArr {
+func (r res) Array() arrRes {
 	var result []jsoniter.Any
 	var val = r.any
 	for i := 0; i < val.Size(); i++ {
@@ -99,9 +99,9 @@ func (r res) Array() resArr {
 	return result
 }
 
-type resArr []jsoniter.Any
+type arrRes []jsoniter.Any
 
-func (a resArr) String() []string {
+func (a arrRes) String() []string {
 	var result []string
 	for i := 0; i < len(a); i++ {
 		result = append(result, a[i].ToString())
@@ -109,7 +109,7 @@ func (a resArr) String() []string {
 	return result
 }
 
-func (a resArr) Int() []int {
+func (a arrRes) Int() []int {
 	var result []int
 	for i := 0; i < len(a); i++ {
 		result = append(result, a[i].ToInt())
@@ -117,7 +117,7 @@ func (a resArr) Int() []int {
 	return result
 }
 
-func (a resArr) Float64() []float64 {
+func (a arrRes) Float64() []float64 {
 	var result []float64
 	for i := 0; i < len(a); i++ {
 		result = append(result, a[i].ToFloat64())
@@ -125,7 +125,7 @@ func (a resArr) Float64() []float64 {
 	return result
 }
 
-func (a resArr) Get(path ...interface{}) resArr {
+func (a arrRes) Get(path ...any) arrRes {
 	var result []jsoniter.Any
 	for i := 0; i < len(a); i++ {
 		result = append(result, a[i].Get(path...))

@@ -21,15 +21,15 @@ type ex int
 const Extract ex = iota
 
 type meta struct {
-	src []interface{}
+	src []any
 }
 
 type extract struct {
-	src   []interface{}
+	src   []any
 	field string
 }
 
-func (e ex) Src(src ...interface{}) *meta {
+func (e ex) Src(src ...any) *meta {
 	return &meta{src: src}
 }
 
@@ -61,7 +61,7 @@ func (e *extract) String() []string {
 	return doString(e.src, e.field)
 }
 
-func doInt(src []interface{}, field string) []int {
+func doInt(src []any, field string) []int {
 	var data = doExtract(src, field)
 	var res []int
 	for i := 0; i < len(data); i++ {
@@ -87,7 +87,7 @@ func doInt(src []interface{}, field string) []int {
 	return res
 }
 
-func doInt32(src []interface{}, field string) []int32 {
+func doInt32(src []any, field string) []int32 {
 	var data = doExtract(src, field)
 	var res []int32
 	for i := 0; i < len(data); i++ {
@@ -113,7 +113,7 @@ func doInt32(src []interface{}, field string) []int32 {
 	return res
 }
 
-func doInt64(src []interface{}, field string) []int64 {
+func doInt64(src []any, field string) []int64 {
 	var data = doExtract(src, field)
 	var res []int64
 	for i := 0; i < len(data); i++ {
@@ -139,7 +139,7 @@ func doInt64(src []interface{}, field string) []int64 {
 	return res
 }
 
-func doFloat32(src []interface{}, field string) []float32 {
+func doFloat32(src []any, field string) []float32 {
 	var data = doExtract(src, field)
 	var res []float32
 	for i := 0; i < len(data); i++ {
@@ -165,7 +165,7 @@ func doFloat32(src []interface{}, field string) []float32 {
 	return res
 }
 
-func doFloat64(src []interface{}, field string) []float64 {
+func doFloat64(src []any, field string) []float64 {
 	var data = doExtract(src, field)
 	var res []float64
 	for i := 0; i < len(data); i++ {
@@ -191,7 +191,7 @@ func doFloat64(src []interface{}, field string) []float64 {
 	return res
 }
 
-func doString(src []interface{}, field string) []string {
+func doString(src []any, field string) []string {
 	var data = doExtract(src, field)
 	var res []string
 	for i := 0; i < len(data); i++ {
@@ -220,16 +220,16 @@ func doString(src []interface{}, field string) []string {
 	return res
 }
 
-func doExtract(src []interface{}, field string) []interface{} {
+func doExtract(src []any, field string) []any {
 
 	if len(src) == 0 {
 		return src
 	}
 
-	var res []interface{}
+	var res []any
 
-	var fn func(source interface{})
-	fn = func(source interface{}) {
+	var fn func(source any)
+	fn = func(source any) {
 		var srcValue = reflect.ValueOf(source)
 		var srcType = reflect.TypeOf(source)
 

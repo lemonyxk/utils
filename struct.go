@@ -20,8 +20,8 @@ type structure int
 
 const Structure structure = iota
 
-func (d structure) StructToMap(input interface{}) map[string]interface{} {
-	var output = make(map[string]interface{})
+func (d structure) StructToMap(input any) map[string]any {
+	var output = make(map[string]any)
 
 	if input == nil {
 		return output
@@ -52,11 +52,11 @@ func (d structure) StructToMap(input interface{}) map[string]interface{} {
 	return output
 }
 
-func (d structure) MapToStruct(input interface{}, output interface{}) error {
+func (d structure) MapToStruct(input any, output any) error {
 	return mapstructure.WeakDecode(input, output)
 }
 
-func (d structure) GetTags(src interface{}) []string {
+func (d structure) GetTags(src any) []string {
 	if src == nil {
 		return []string{}
 	}

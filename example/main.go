@@ -13,7 +13,7 @@ package main
 import (
 	"log"
 
-	"github.com/lemoyxk/utils/v3"
+	"github.com/lemonyxk/utils/v3"
 )
 
 type A struct {

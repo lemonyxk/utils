@@ -111,16 +111,22 @@ func doUnzip(cf *zip2.ReadCloser, absPath string) error {
 		}
 
 		f, err := os.Create(path.Join(absPath, file.Name))
+		if err != nil {
+			_ = rc.Close()
+			continue
+		}
+
 		_, err = io.Copy(f, rc)
 		if err != nil {
 			_ = rc.Close()
+			_ = f.Close()
 			return err
 		}
 
 		_ = rc.Close()
 		_ = f.Close()
-
 	}
+
 	return nil
 }
 

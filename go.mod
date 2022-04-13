@@ -1,4 +1,4 @@
-module github.com/lemoyxk/utils/v3
+module github.com/lemonyxk/utils/v3
 
 go 1.18
 

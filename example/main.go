@@ -39,22 +39,42 @@ func main() {
 	//
 	// log.Println(b)
 
-	var a = A{Name: "hello"}
-	var b = A{Name: "world"}
-	var c = []A{a, b}
-	var d = []any{a, b, c}
-	var e = map[string]any{"Name": 111}
-	var res = utils.Extract.Src(d).Field("Name").String()
-	log.Println(res)
+	// var a = A{Name: "hello"}
+	// var b = A{Name: "world"}
+	// var c = []A{a, b}
+	// var d = []any{a, b, c}
+	// var e = map[string]any{"Name": 111}
+	// var res = utils.Extract.Src(d).Field("Name").String()
+	// log.Println(res)
+	//
+	// log.Println(utils.Structure.GetTags(A{}))
+	//
+	// utils.Assign.Dest(&a).Src(&e).AllowWeak().Do()
+	//
+	// log.Println(a)
+	//
+	// var aa = A{Name: "50"}
+	// var bb = B{Name: 11111}
+	// utils.Assign.Dest(&bb).Src(&aa).AllowWeak().Do()
+	// log.Println(bb)
 
-	log.Println(utils.Structure.GetTags(A{}))
+	// var res = []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+	//
+	// var arr = utils.Array(&res)
+	//
+	// var add = []int{100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000, 2100, 2200, 2300, 2400, 2500, 2600, 2700, 2800, 2900, 3000, 3100, 3200, 3300, 3400, 3500, 3600, 3700, 3800, 3900, 4000, 4100, 4200, 4300, 4400, 4500, 4600, 4700, 4800, 4900, 5000}
+	//
+	// arr.Splice(3, 2, add...)
+	//
+	// log.Println(res)
 
-	utils.Assign.Dest(&a).Src(&e).AllowWeak().Do()
+	var res = []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 
-	log.Println(a)
+	var arr = utils.Ordered(&res)
 
-	var aa = A{Name: "50"}
-	var bb = B{Name: 11111}
-	utils.Assign.Dest(&bb).Src(&aa).AllowWeak().Do()
-	log.Println(bb)
+	arr.Desc()
+
+	log.Println(arr.Slice(3, 5))
+
+	// log.Println(arr.Slice(0, 1))
 }

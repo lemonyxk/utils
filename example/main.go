@@ -70,9 +70,7 @@ func main() {
 
 	var res = []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 
-	var arr = utils.Ordered(&res)
-
-	arr.Desc()
+	var arr = utils.OrderedArray(&res)
 
 	log.Println(arr.Slice(3, 5))
 

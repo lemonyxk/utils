@@ -12,25 +12,25 @@ package utils
 
 import "github.com/lemonyxk/utils/v3/constraints"
 
-func Ordered[T constraints.Ordered](src *[]T) ordered[T] {
-	return ordered[T]{array: array[T]{src: src}}
+func OrderedArray[T constraints.Ordered](src *[]T) orderedArray[T] {
+	return orderedArray[T]{comparableArray: comparableArray[T]{anyArray[T]{src: src}}}
 }
 
-type ordered[T constraints.Ordered] struct {
+type orderedArray[T constraints.Ordered] struct {
 	// src *[]T
-	array[T]
+	comparableArray[T]
 }
 
-func (a ordered[T]) Sum() T {
+func (a orderedArray[T]) Sum() T {
 	var sum T
 	var src = *a.src
-	for _, v := range src {
-		sum += v
+	for i := 0; i < len(src); i++ {
+		sum += src[i]
 	}
 	return sum
 }
 
-func (a ordered[T]) Max() T {
+func (a orderedArray[T]) Max() T {
 
 	var src = *a.src
 
@@ -49,7 +49,7 @@ func (a ordered[T]) Max() T {
 	return max
 }
 
-func (a ordered[T]) Min() T {
+func (a orderedArray[T]) Min() T {
 
 	var src = *a.src
 
@@ -68,7 +68,7 @@ func (a ordered[T]) Min() T {
 	return min
 }
 
-func (a ordered[T]) Asc() {
+func (a orderedArray[T]) Asc() {
 	var src = *a.src
 	var data = src
 	for i := 0; i < len(data)-1; i++ {
@@ -81,7 +81,7 @@ func (a ordered[T]) Asc() {
 	*a.src = data
 }
 
-func (a ordered[T]) Desc() {
+func (a orderedArray[T]) Desc() {
 	var src = *a.src
 	var data = src
 	for i := 0; i < len(data)-1; i++ {
@@ -94,15 +94,16 @@ func (a ordered[T]) Desc() {
 	*a.src = data
 }
 
-func Array[T comparable](src *[]T) array[T] {
-	return array[T]{src}
+func ComparableArray[T comparable](src *[]T) comparableArray[T] {
+	return comparableArray[T]{anyArray[T]{src: src}}
 }
 
-type array[T comparable] struct {
-	src *[]T
+type comparableArray[T comparable] struct {
+	// src *[]T
+	anyArray[T]
 }
 
-func (a array[T]) Has(s T) bool {
+func (a comparableArray[T]) Has(s T) bool {
 	var src = *a.src
 	for i := 0; i < len(src); i++ {
 		if src[i] == s {
@@ -112,7 +113,7 @@ func (a array[T]) Has(s T) bool {
 	return false
 }
 
-func (a array[T]) Index(s T) int {
+func (a comparableArray[T]) Index(s T) int {
 	var src = *a.src
 	for i := 0; i < len(src); i++ {
 		if src[i] == s {
@@ -122,7 +123,15 @@ func (a array[T]) Index(s T) int {
 	return -1
 }
 
-func (a array[T]) Slice(start, end int) []T {
+func AnyArray[T any](src *[]T) anyArray[T] {
+	return anyArray[T]{src}
+}
+
+type anyArray[T any] struct {
+	src *[]T
+}
+
+func (a anyArray[T]) Slice(start, end int) []T {
 
 	var src = *a.src
 
@@ -147,7 +156,7 @@ func (a array[T]) Slice(start, end int) []T {
 	return res
 }
 
-func (a array[T]) Splice(start int, count int, elem ...T) []T {
+func (a anyArray[T]) Splice(start int, count int, elem ...T) []T {
 
 	var src = *a.src
 
@@ -179,7 +188,7 @@ func (a array[T]) Splice(start int, count int, elem ...T) []T {
 	return p3
 }
 
-func (a array[T]) Insert(start int, elem ...T) {
+func (a anyArray[T]) Insert(start int, elem ...T) {
 
 	var src = *a.src
 
@@ -203,7 +212,7 @@ func (a array[T]) Insert(start int, elem ...T) {
 	*a.src = src
 }
 
-func (a array[T]) Delete(start int, count int) {
+func (a anyArray[T]) Delete(start int, count int) {
 
 	var src = *a.src
 

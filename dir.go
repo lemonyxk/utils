@@ -52,7 +52,6 @@ func (d dir) LastError() error {
 }
 
 func (d dir) ReadAll() []dirInfo {
-
 	var res []dirInfo
 
 	var fn func(path string, res *[]dirInfo)
@@ -77,7 +76,6 @@ func (d dir) ReadAll() []dirInfo {
 	fn(d.path, &res)
 
 	return res
-
 }
 
 func (d dir) Walk() chan dirInfo {

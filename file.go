@@ -42,22 +42,13 @@ func (fi fi) ReadFromString(str string) fileInfo {
 
 func (fi fi) ReadFromReader(r io.Reader) fileInfo {
 	b, err := ioutil.ReadAll(r)
-	if err != nil {
-		return fileInfo{err: err, bytes: nil}
-	}
-	return fileInfo{err: nil, bytes: b}
+	return fileInfo{err: err, bytes: b}
 }
 
 func (fi fi) ReadFromPath(path string) fileInfo {
 	absPath, err := filepath.Abs(path)
-	if err != nil {
-		return fileInfo{err: err, bytes: nil}
-	}
 	b, err := ioutil.ReadFile(absPath)
-	if err != nil {
-		return fileInfo{err: err, bytes: nil}
-	}
-	return fileInfo{err: nil, bytes: b}
+	return fileInfo{err: err, bytes: b}
 }
 
 func (i fileInfo) LastError() error {
@@ -83,6 +74,10 @@ func (i fileInfo) String() string {
 }
 
 func (i fileInfo) WriteToPath(path string) error {
+	if i.err != nil {
+		return i.err
+	}
+
 	absPath, err := filepath.Abs(path)
 	if err != nil {
 		return err
@@ -103,6 +98,10 @@ func (i fileInfo) WriteToPath(path string) error {
 }
 
 func (i fileInfo) WriteToReader(w io.Writer) error {
+	if i.err != nil {
+		return i.err
+	}
+
 	_, err := io.Copy(w, bytes.NewReader(i.bytes))
 	if err != nil {
 		return err
@@ -111,6 +110,10 @@ func (i fileInfo) WriteToReader(w io.Writer) error {
 }
 
 func (i fileInfo) WriteToBytes(bts []byte) error {
+	if i.err != nil {
+		return i.err
+	}
+
 	if len(bts) <= len(i.bytes) {
 		copy(bts, i.bytes)
 		return nil

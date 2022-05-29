@@ -74,5 +74,8 @@ func main() {
 
 	log.Println(arr.Slice(3, 5))
 
+	// log.Println(utils.Zip.ZipFromDir("./").To("./z.zip"))
+	// log.Println(utils.Zip.UnzipFromFile("./z.zip").To("./z"))
+
 	// log.Println(arr.Slice(0, 1))
 }

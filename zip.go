@@ -69,7 +69,7 @@ func (z unzipReader) To(dst string) error {
 		return err
 	}
 
-	return doUnzip(&zip2.ReadCloser{Reader: *cf}, absPath)
+	return doUnzip(cf.File, absPath)
 }
 
 // To need a dir
@@ -94,11 +94,11 @@ func (z unzipFile) To(dst string) error {
 	}
 	defer func() { _ = cf.Close() }()
 
-	return doUnzip(cf, absPath)
+	return doUnzip(cf.File, absPath)
 }
 
-func doUnzip(cf *zip2.ReadCloser, absPath string) error {
-	for _, file := range cf.File {
+func doUnzip(cf []*zip2.File, absPath string) error {
+	for _, file := range cf {
 
 		if file.FileInfo().IsDir() {
 			_ = os.Mkdir(path.Join(absPath, file.Name), 0755)
@@ -159,9 +159,10 @@ func (z zipDir) To(dst string) error {
 		return err
 	}
 
-	_, err = os.Stat(filepath.Dir(absPath))
+	absDstPath := filepath.Dir(absPath)
+	_, err = os.Stat(absDstPath)
 	if os.IsNotExist(err) {
-		err = os.MkdirAll(filepath.Dir(absPath), 0755)
+		err = os.MkdirAll(absDstPath, 0755)
 		if err != nil {
 			return err
 		}
@@ -196,7 +197,7 @@ func (z zipDir) To(dst string) error {
 		if err != nil {
 			return err
 		}
-		err = doZip(files[i].Path(), files[i].Info(), zw)
+		err = doZip(absDstPath, files[i].Path(), files[i].Info(), zw)
 		if err != nil {
 			return err
 		}
@@ -212,9 +213,10 @@ func (z zipFile) To(dst string) error {
 		return err
 	}
 
-	_, err = os.Stat(filepath.Dir(absPath))
+	absDstDir := filepath.Dir(absPath)
+	_, err = os.Stat(absDstDir)
 	if os.IsNotExist(err) {
-		err = os.MkdirAll(filepath.Dir(absPath), 0755)
+		err = os.MkdirAll(absDstDir, 0755)
 		if err != nil {
 			return err
 		}
@@ -238,16 +240,16 @@ func (z zipFile) To(dst string) error {
 	var zw = zip2.NewWriter(fw)
 	defer func() { _ = zw.Close() }()
 
-	return doZip(z.src, fStat, zw)
+	return doZip(absDstDir, z.src, fStat, zw)
 }
 
-func doZip(path string, fi os.FileInfo, zw *zip2.Writer) error {
+func doZip(dst, path string, fi os.FileInfo, zw *zip2.Writer) error {
 	fh, err := zip2.FileInfoHeader(fi)
 	if err != nil {
 		return err
 	}
 
-	fh.Name = filepath.Base(path) + "2"
+	fh.Name = path[len(dst)+1:]
 
 	if fi.IsDir() {
 		fh.Name += string(filepath.Separator)

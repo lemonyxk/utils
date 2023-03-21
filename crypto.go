@@ -17,6 +17,7 @@ import (
 	"crypto/sha256"
 	"crypto/sha512"
 	"encoding/base64"
+	"encoding/hex"
 	"hash"
 )
 
@@ -32,8 +33,8 @@ func (c *cs) Bytes() []byte {
 	return c.bts
 }
 
-func (c *cs) String() string {
-	return string(c.bts)
+func (c *cs) Hex() string {
+	return hex.EncodeToString(c.bts)
 }
 
 func (c crypto) Md5(input []byte) *cs {

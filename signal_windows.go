@@ -1,3 +1,4 @@
+//go:build windows
 // +build windows
 
 /**
@@ -34,26 +35,19 @@ func (d *done) Done(fn func(sig os.Signal)) {
 
 func (s sig) ListenKill() *done {
 	var signalList = []os.Signal{syscall.SIGINT, syscall.SIGTERM}
-	// 创建信号
 	signalChan := make(chan os.Signal, 1)
-	// 通知
 	signal.Notify(signalChan, signalList...)
 	return &done{fn: func(f func(signal os.Signal)) {
-		// 阻塞
 		f(<-signalChan)
-		// 停止
 		signal.Stop(signalChan)
 	}}
 }
 
 func (s sig) Listen(sig ...os.Signal) *done {
 	var signalList = sig
-	// 创建信号
 	signalChan := make(chan os.Signal, 1)
-	// 通知
 	signal.Notify(signalChan, signalList...)
 	return &done{fn: func(f func(signal os.Signal)) {
-		// 阻塞
 		f(<-signalChan)
 		// 停止
 		signal.Stop(signalChan)

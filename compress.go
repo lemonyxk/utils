@@ -77,7 +77,7 @@ func (s *srcPath) Zip(dst string) error {
 		defer func() { _ = zw.Close() }()
 
 		for i := 0; i < len(files); i++ {
-			err = files[i].LastError()
+			err = files[i].Error()
 			if err != nil {
 				return err
 			}
@@ -241,7 +241,7 @@ func (s *srcPath) TarGz(dst string) error {
 		defer func() { _ = tw.Close() }()
 
 		for i := 0; i < len(files); i++ {
-			err = files[i].LastError()
+			err = files[i].Error()
 			if err != nil {
 				return err
 			}

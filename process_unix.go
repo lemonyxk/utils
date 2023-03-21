@@ -1,3 +1,4 @@
+//go:build aix || darwin || dragonfly || freebsd || linux || netbsd || openbsd || solaris
 // +build aix darwin dragonfly freebsd linux netbsd openbsd solaris
 
 /**
@@ -23,13 +24,13 @@ type pro int
 
 const Process pro = iota
 
-type proc struct {
+type process struct {
 	Cmd *cmd
 }
 
 var pMux sync.Mutex
 
-var worker []*proc
+var worker []*process
 
 var workerNumber int
 
@@ -56,12 +57,13 @@ func (p pro) run() {
 	defer pMux.Unlock()
 	for i := 0; i < workerNumber; i++ {
 		var c = Cmd.New(strings.Join(os.Args, " "))
+		c.c.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
 		err := c.c.Start()
 		if err != nil {
 			panic(err)
 		}
 		go func() { _, _ = c.c.Process.Wait() }()
-		worker = append(worker, &proc{Cmd: c})
+		worker = append(worker, &process{Cmd: c})
 	}
 }
 
@@ -83,8 +85,8 @@ func (p pro) Reload() {
 	if managerPid == 0 {
 		return
 	}
-	for _, proc := range worker {
-		p.Kill(proc.Cmd.c.Process.Pid)
+	for _, ps := range worker {
+		p.Kill(ps.Cmd.c.Process.Pid)
 	}
 	p.run()
 }
@@ -93,6 +95,6 @@ func (p pro) Manager() int {
 	return managerPid
 }
 
-func (p pro) Worker() []*proc {
+func (p pro) Worker() []*process {
 	return worker
 }

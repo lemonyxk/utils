@@ -1,3 +1,4 @@
+//go:build aix || darwin || dragonfly || freebsd || linux || netbsd || openbsd || solaris
 // +build aix darwin dragonfly freebsd linux netbsd openbsd solaris
 
 /**
@@ -13,9 +14,8 @@
 package utils
 
 import (
-	"os"
 	"os/exec"
-	"syscall"
+	"strings"
 )
 
 type cm int
@@ -27,8 +27,11 @@ type cmd struct {
 }
 
 func (cm cm) New(command string) *cmd {
-	var c = exec.Command(os.Getenv("SHELL"), "-c", command)
-	c.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
+	var arr = strings.Split(command, " ")
+	if len(arr) == 0 {
+		panic("command is empty")
+	}
+	var c = exec.Command(arr[0], arr[1:]...)
 	return &cmd{c: c}
 }
 

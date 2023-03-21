@@ -28,7 +28,7 @@ func (a addr) GetLocalhostIp() string {
 	}
 
 	for i := 0; i < len(addresses); i++ {
-		// 检查ip地址判断是否回环地址
+		// check the address type and if it is not a LoopBack the display it
 		if ipNet, ok := addresses[i].(*net.IPNet); ok && !ipNet.IP.IsLoopback() {
 			if ipNet.IP.To4() != nil {
 				defaultIP = ipNet.IP.String()

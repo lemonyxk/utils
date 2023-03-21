@@ -13,9 +13,9 @@ package utils
 import (
 	"bytes"
 	"io"
-	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 type fi int
@@ -23,8 +23,8 @@ type fi int
 const File fi = iota
 
 type fileInfo struct {
-	bytes []byte
-	err   error
+	reader io.Reader
+	err    error
 }
 
 func (fi fi) IsExist(path string) bool {
@@ -33,44 +33,41 @@ func (fi fi) IsExist(path string) bool {
 }
 
 func (fi fi) ReadFromBytes(bts []byte) fileInfo {
-	return fileInfo{err: nil, bytes: bts}
+	return fileInfo{err: nil, reader: bytes.NewReader(bts)}
 }
 
 func (fi fi) ReadFromString(str string) fileInfo {
-	return fileInfo{err: nil, bytes: []byte(str)}
+	return fileInfo{err: nil, reader: strings.NewReader(str)}
 }
 
 func (fi fi) ReadFromReader(r io.Reader) fileInfo {
-	b, err := ioutil.ReadAll(r)
-	return fileInfo{err: err, bytes: b}
+	return fileInfo{err: nil, reader: r}
 }
 
-func (fi fi) ReadFromPath(path string) fileInfo {
-	absPath, err := filepath.Abs(path)
-	b, err := ioutil.ReadFile(absPath)
-	return fileInfo{err: err, bytes: b}
-}
-
-func (i fileInfo) LastError() error {
+func (i fileInfo) Error() error {
 	return i.err
 }
 
 func (i fileInfo) Bytes() []byte {
-	return i.bytes
-}
-
-func (i fileInfo) Append(bts []byte) fileInfo {
-	i.bytes = append(i.bytes, bts...)
-	return i
-}
-
-func (i fileInfo) Slice(start int, end int) fileInfo {
-	i.bytes = i.bytes[start:end]
-	return i
+	if i.err != nil {
+		return nil
+	}
+	var bts, err = io.ReadAll(i.reader)
+	if err != nil {
+		return nil
+	}
+	return bts
 }
 
 func (i fileInfo) String() string {
-	return string(i.bytes)
+	if i.err != nil {
+		return ""
+	}
+	var bts, err = io.ReadAll(i.reader)
+	if err != nil {
+		return ""
+	}
+	return string(bts)
 }
 
 func (i fileInfo) WriteToPath(path string) error {
@@ -84,12 +81,12 @@ func (i fileInfo) WriteToPath(path string) error {
 	}
 
 	f, err := os.Create(absPath)
-	defer func() { _ = f.Close() }()
 	if err != nil {
 		return err
 	}
+	defer func() { _ = f.Close() }()
 
-	_, err = io.Copy(f, bytes.NewReader(i.bytes))
+	_, err = io.Copy(f, i.reader)
 	if err != nil {
 		return err
 	}
@@ -102,23 +99,9 @@ func (i fileInfo) WriteToReader(w io.Writer) error {
 		return i.err
 	}
 
-	_, err := io.Copy(w, bytes.NewReader(i.bytes))
+	_, err := io.Copy(w, i.reader)
 	if err != nil {
 		return err
 	}
-	return nil
-}
-
-func (i fileInfo) WriteToBytes(bts []byte) error {
-	if i.err != nil {
-		return i.err
-	}
-
-	if len(bts) <= len(i.bytes) {
-		copy(bts, i.bytes)
-		return nil
-	}
-	bts = bts[0 : len(i.bytes)-1]
-	copy(bts, i.bytes)
 	return nil
 }

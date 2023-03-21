@@ -72,7 +72,7 @@ func (c crypto) Sha512(input []byte) *cs {
 	return &cs{bts: bytes}
 }
 
-func (c crypto) HmacSha1(fn func() hash.Hash, key, input []byte) *cs {
+func (c crypto) HMacSha1(fn func() hash.Hash, key, input []byte) *cs {
 	var h = hmac.New(fn, key)
 	h.Write(input)
 	return &cs{bts: h.Sum(nil)}

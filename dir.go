@@ -47,7 +47,7 @@ func (d dir) IsExist() bool {
 	return !os.IsNotExist(err)
 }
 
-func (d dir) LastError() error {
+func (d dir) Error() error {
 	return d.err
 }
 
@@ -96,7 +96,7 @@ type dirInfo struct {
 	err  error
 }
 
-func (f *dirInfo) LastError() error {
+func (f *dirInfo) Error() error {
 	return f.err
 }
 

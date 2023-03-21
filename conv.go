@@ -46,20 +46,6 @@ func (c conv) Float32ToString(i float64) string {
 	return strconv.FormatFloat(i, 'f', -1, 32)
 }
 
-func (c conv) BoolToInt(i bool) int {
-	if i {
-		return 1
-	}
-	return 0
-}
-
-func (c conv) IntToBool(i int) bool {
-	if i > 0 {
-		return true
-	}
-	return false
-}
-
 func (c conv) StringToFloat64(i string) float64 {
 	var n, _ = strconv.ParseFloat(i, 64)
 	return n

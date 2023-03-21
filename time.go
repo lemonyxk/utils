@@ -77,7 +77,7 @@ func (d date) Year() timeInfo {
 	return timeInfo{time: d.time, flag: year}
 }
 
-func (d date) LastError() error {
+func (d date) Error() error {
 	return d.err
 }
 
@@ -150,12 +150,12 @@ func (ti ti) Timestamp(timestamp int64) date {
 	return date{time: time.Unix(timestamp, 0)}
 }
 
-func (ti ti) String(format, dateString string) date {
+func (ti ti) Format(format, dateString string) date {
 	var t, err = time.ParseInLocation(format, dateString, time.Local)
 	return date{time: t, err: err}
 }
 
-func (ti ti) FullString(dateString string) date {
+func (ti ti) String(dateString string) date {
 	var t, err = time.ParseInLocation(full, dateString, time.Local)
 	return date{time: t, err: err}
 }

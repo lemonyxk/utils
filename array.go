@@ -10,7 +10,7 @@
 
 package utils
 
-import "github.com/lemonyxk/utils/v3/constraints"
+import "github.com/lemonyxk/utils/constraints"
 
 func OrderedArray[T constraints.Ordered](src *[]T) orderedArray[T] {
 	return orderedArray[T]{comparableArray: comparableArray[T]{anyArray[T]{src: src}}}

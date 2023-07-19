@@ -11,9 +11,8 @@
 package main
 
 import (
+	"github.com/lemonyxk/utils/array"
 	"log"
-
-	"github.com/lemonyxk/utils"
 )
 
 type A struct {
@@ -70,9 +69,17 @@ func main() {
 
 	var res = []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 
-	var arr = utils.OrderedArray(&res)
+	var arr = array.Ordered(res)
 
 	log.Println(arr.Slice(3, 5))
+
+	var a = []int{1, 2, 3, -9}
+
+	array.From(a).Sort(func(a int, b int) bool {
+		return b > a
+	})
+
+	log.Println(a)
 
 	// log.Println(utils.Compress.From("./").TarGz("./z.tar.gz"))
 	// log.Println(utils.Compress.From("../asasasa/z.tar.gz").UnTarGz("../asasasa"))

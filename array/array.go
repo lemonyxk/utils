@@ -16,7 +16,7 @@ import (
 )
 
 func Ordered[T constraints.Ordered](src []T) Order[T] {
-	return Order[T]{Compare: Compare[T]{Any[T]{src: src}}}
+	return Order[T]{Compare: Compare[T]{Array[T]{src: src}}}
 }
 
 type Order[T constraints.Ordered] struct {
@@ -66,31 +66,23 @@ func (a Order[T]) Min() T {
 }
 
 func (a Order[T]) Asc() {
-	for i := 0; i < len(a.src)-1; i++ {
-		for j := i + 1; j < len(a.src); j++ {
-			if a.src[i] > a.src[j] {
-				a.src[i], a.src[j] = a.src[j], a.src[i]
-			}
-		}
-	}
+	sort.Slice(a.src, func(i, j int) bool {
+		return a.src[i] < a.src[j]
+	})
 }
 
 func (a Order[T]) Desc() {
-	for i := 0; i < len(a.src)-1; i++ {
-		for j := i + 1; j < len(a.src); j++ {
-			if a.src[i] < a.src[j] {
-				a.src[i], a.src[j] = a.src[j], a.src[i]
-			}
-		}
-	}
+	sort.Slice(a.src, func(i, j int) bool {
+		return a.src[i] > a.src[j]
+	})
 }
 
 func Comparable[T comparable](src []T) Compare[T] {
-	return Compare[T]{Any[T]{src: src}}
+	return Compare[T]{Array[T]{src: src}}
 }
 
 type Compare[T comparable] struct {
-	Any[T]
+	Array[T]
 }
 
 func (a Compare[T]) Has(s T) bool {
@@ -176,15 +168,15 @@ func (a Compare[T]) Union(s []T) []T {
 	return res
 }
 
-func From[T any](src []T) Any[T] {
-	return Any[T]{src}
+func Any[T any](src []T) Array[T] {
+	return Array[T]{src}
 }
 
-type Any[T any] struct {
+type Array[T any] struct {
 	src []T
 }
 
-func (a Any[T]) Slice(start, end int) []T {
+func (a Array[T]) Slice(start, end int) []T {
 
 	var res []T
 
@@ -207,7 +199,7 @@ func (a Any[T]) Slice(start, end int) []T {
 	return res
 }
 
-func (a Any[T]) Splice(start int, count int, elem ...T) []T {
+func (a Array[T]) Splice(start int, count int, elem ...T) []T {
 
 	if start < 0 {
 		panic("start must be greater than 0")
@@ -235,7 +227,7 @@ func (a Any[T]) Splice(start int, count int, elem ...T) []T {
 	return p3
 }
 
-func (a Any[T]) Insert(start int, elem ...T) {
+func (a Array[T]) Insert(start int, elem ...T) {
 
 	if start < 0 {
 		panic("start must be greater than 0")
@@ -255,7 +247,7 @@ func (a Any[T]) Insert(start int, elem ...T) {
 	a.src = append(a.src, p2...)
 }
 
-func (a Any[T]) Delete(start int, count int) {
+func (a Array[T]) Delete(start int, count int) {
 
 	if start < 0 {
 		panic("start must be greater than 0")
@@ -278,27 +270,27 @@ func (a Any[T]) Delete(start int, count int) {
 	a.src = append(a.src, p2...)
 }
 
-func (a Any[T]) Push(elem ...T) {
+func (a Array[T]) Push(elem ...T) {
 	a.src = append(a.src, elem...)
 }
 
-func (a Any[T]) Pop() T {
+func (a Array[T]) Pop() T {
 	var elem = a.src[len(a.src)-1]
 	a.src = a.src[:len(a.src)-1]
 	return elem
 }
 
-func (a Any[T]) Shift() T {
+func (a Array[T]) Shift() T {
 	var elem = a.src[0]
 	a.src = a.src[1:]
 	return elem
 }
 
-func (a Any[T]) UnShift(elem ...T) {
+func (a Array[T]) UnShift(elem ...T) {
 	a.src = append(elem, a.src...)
 }
 
-func (a Any[T]) Concat(src ...[]T) []T {
+func (a Array[T]) Concat(src ...[]T) []T {
 	var res = a.src[:]
 	for i := 0; i < len(src); i++ {
 		res = append(res, src[i]...)
@@ -306,19 +298,19 @@ func (a Any[T]) Concat(src ...[]T) []T {
 	return res
 }
 
-func (a Any[T]) Reverse() {
+func (a Array[T]) Reverse() {
 	for i := 0; i < len(a.src)/2; i++ {
 		a.src[i], a.src[len(a.src)-1-i] = a.src[len(a.src)-1-i], a.src[i]
 	}
 }
 
-func (a Any[T]) ForEach(fn func(elem T, index int)) {
+func (a Array[T]) ForEach(fn func(elem T, index int)) {
 	for i := 0; i < len(a.src); i++ {
 		fn(a.src[i], i)
 	}
 }
 
-func (a Any[T]) Map(fn func(elem T, index int) T) []T {
+func (a Array[T]) Map(fn func(elem T, index int) T) []T {
 	var res []T
 	for i := 0; i < len(a.src); i++ {
 		res = append(res, fn(a.src[i], i))
@@ -326,7 +318,7 @@ func (a Any[T]) Map(fn func(elem T, index int) T) []T {
 	return res
 }
 
-func (a Any[T]) Filter(fn func(elem T, index int) bool) []T {
+func (a Array[T]) Filter(fn func(elem T, index int) bool) []T {
 	var res []T
 	for i := 0; i < len(a.src); i++ {
 		if fn(a.src[i], i) {
@@ -336,7 +328,7 @@ func (a Any[T]) Filter(fn func(elem T, index int) bool) []T {
 	return res
 }
 
-func (a Any[T]) Reduce(fn func(prev T, curr T, index int) T, init T) T {
+func (a Array[T]) Reduce(fn func(prev T, curr T, index int) T, init T) T {
 	var res = init
 	for i := 0; i < len(a.src); i++ {
 		res = fn(res, a.src[i], i)
@@ -344,8 +336,12 @@ func (a Any[T]) Reduce(fn func(prev T, curr T, index int) T, init T) T {
 	return res
 }
 
-func (a Any[T]) Sort(fn func(a T, b T) bool) {
+func (a Array[T]) Sort(fn func(a T, b T) bool) {
 	sort.Slice(a.src, func(i, j int) bool {
 		return fn(a.src[i], a.src[j])
 	})
+}
+
+func (a Array[T]) Data() []T {
+	return a.src
 }

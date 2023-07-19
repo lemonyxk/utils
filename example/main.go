@@ -75,7 +75,7 @@ func main() {
 
 	var a = []int{1, 2, 3, -9}
 
-	array.From(a).Sort(func(a int, b int) bool {
+	array.Any(a).Sort(func(a int, b int) bool {
 		return b > a
 	})
 

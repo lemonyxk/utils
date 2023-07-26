@@ -10,6 +10,11 @@
 
 package main
 
+import (
+	"github.com/lemonyxk/utils/array"
+	"log"
+)
+
 type A struct {
 	Name string `json:"name"`
 }
@@ -19,6 +24,10 @@ type B struct {
 }
 
 func main() {
+
+	var test []*A
+
+	log.Println(array.Any(test).First() == nil)
 
 	// log.Println(utils.Sort(1, 2, -1).Asc(1))
 	// log.Println(utils.Sort(1, 2, -1).Desc())

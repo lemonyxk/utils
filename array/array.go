@@ -176,6 +176,22 @@ type Array[T any] struct {
 	src []T
 }
 
+func (a Array[T]) First() T {
+	if len(a.src) == 0 {
+		var zero T
+		return zero
+	}
+	return a.src[0]
+}
+
+func (a Array[T]) Last() T {
+	if len(a.src) == 0 {
+		var zero T
+		return zero
+	}
+	return a.src[len(a.src)-1]
+}
+
 func (a Array[T]) Slice(start, end int) []T {
 
 	var res []T

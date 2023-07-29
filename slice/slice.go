@@ -8,7 +8,7 @@
 * @create: 2020-01-07 21:38
 **/
 
-package array
+package slice
 
 import (
 	"github.com/lemonyxk/utils/constraints"
@@ -16,7 +16,7 @@ import (
 )
 
 func Ordered[T constraints.Ordered](src []T) Order[T] {
-	return Order[T]{Compare: Compare[T]{Array[T]{src: src}}}
+	return Order[T]{Compare: Compare[T]{Slice[T]{src: src}}}
 }
 
 type Order[T constraints.Ordered] struct {
@@ -78,11 +78,11 @@ func (a Order[T]) Desc() {
 }
 
 func Comparable[T comparable](src []T) Compare[T] {
-	return Compare[T]{Array[T]{src: src}}
+	return Compare[T]{Slice[T]{src: src}}
 }
 
 type Compare[T comparable] struct {
-	Array[T]
+	Slice[T]
 }
 
 func (a Compare[T]) Has(s T) bool {
@@ -168,15 +168,15 @@ func (a Compare[T]) Union(s []T) []T {
 	return res
 }
 
-func Any[T any](src []T) Array[T] {
-	return Array[T]{src}
+func Any[T any](src []T) Slice[T] {
+	return Slice[T]{src}
 }
 
-type Array[T any] struct {
+type Slice[T any] struct {
 	src []T
 }
 
-func (a Array[T]) First() T {
+func (a Slice[T]) First() T {
 	if len(a.src) == 0 {
 		var zero T
 		return zero
@@ -184,7 +184,7 @@ func (a Array[T]) First() T {
 	return a.src[0]
 }
 
-func (a Array[T]) Last() T {
+func (a Slice[T]) Last() T {
 	if len(a.src) == 0 {
 		var zero T
 		return zero
@@ -192,7 +192,7 @@ func (a Array[T]) Last() T {
 	return a.src[len(a.src)-1]
 }
 
-func (a Array[T]) Slice(start, end int) []T {
+func (a Slice[T]) Slice(start, end int) []T {
 
 	var res []T
 
@@ -215,7 +215,7 @@ func (a Array[T]) Slice(start, end int) []T {
 	return res
 }
 
-func (a Array[T]) Splice(start int, count int, elem ...T) []T {
+func (a Slice[T]) Splice(start int, count int, elem ...T) []T {
 
 	if start < 0 {
 		panic("start must be greater than 0")
@@ -243,7 +243,7 @@ func (a Array[T]) Splice(start int, count int, elem ...T) []T {
 	return p3
 }
 
-func (a Array[T]) Insert(start int, elem ...T) {
+func (a Slice[T]) Insert(start int, elem ...T) {
 
 	if start < 0 {
 		panic("start must be greater than 0")
@@ -263,7 +263,7 @@ func (a Array[T]) Insert(start int, elem ...T) {
 	a.src = append(a.src, p2...)
 }
 
-func (a Array[T]) Delete(start int, count int) {
+func (a Slice[T]) Delete(start int, count int) {
 
 	if start < 0 {
 		panic("start must be greater than 0")
@@ -286,27 +286,27 @@ func (a Array[T]) Delete(start int, count int) {
 	a.src = append(a.src, p2...)
 }
 
-func (a Array[T]) Push(elem ...T) {
+func (a Slice[T]) Push(elem ...T) {
 	a.src = append(a.src, elem...)
 }
 
-func (a Array[T]) Pop() T {
+func (a Slice[T]) Pop() T {
 	var elem = a.src[len(a.src)-1]
 	a.src = a.src[:len(a.src)-1]
 	return elem
 }
 
-func (a Array[T]) Shift() T {
+func (a Slice[T]) Shift() T {
 	var elem = a.src[0]
 	a.src = a.src[1:]
 	return elem
 }
 
-func (a Array[T]) UnShift(elem ...T) {
+func (a Slice[T]) UnShift(elem ...T) {
 	a.src = append(elem, a.src...)
 }
 
-func (a Array[T]) Concat(src ...[]T) []T {
+func (a Slice[T]) Concat(src ...[]T) []T {
 	var res = a.src[:]
 	for i := 0; i < len(src); i++ {
 		res = append(res, src[i]...)
@@ -314,19 +314,19 @@ func (a Array[T]) Concat(src ...[]T) []T {
 	return res
 }
 
-func (a Array[T]) Reverse() {
+func (a Slice[T]) Reverse() {
 	for i := 0; i < len(a.src)/2; i++ {
 		a.src[i], a.src[len(a.src)-1-i] = a.src[len(a.src)-1-i], a.src[i]
 	}
 }
 
-func (a Array[T]) ForEach(fn func(elem T, index int)) {
+func (a Slice[T]) ForEach(fn func(elem T, index int)) {
 	for i := 0; i < len(a.src); i++ {
 		fn(a.src[i], i)
 	}
 }
 
-func (a Array[T]) Map(fn func(elem T, index int) T) []T {
+func (a Slice[T]) Map(fn func(elem T, index int) T) []T {
 	var res []T
 	for i := 0; i < len(a.src); i++ {
 		res = append(res, fn(a.src[i], i))
@@ -334,7 +334,7 @@ func (a Array[T]) Map(fn func(elem T, index int) T) []T {
 	return res
 }
 
-func (a Array[T]) Filter(fn func(elem T, index int) bool) []T {
+func (a Slice[T]) Filter(fn func(elem T, index int) bool) []T {
 	var res []T
 	for i := 0; i < len(a.src); i++ {
 		if fn(a.src[i], i) {
@@ -344,7 +344,7 @@ func (a Array[T]) Filter(fn func(elem T, index int) bool) []T {
 	return res
 }
 
-func (a Array[T]) Reduce(fn func(prev T, curr T, index int) T, init T) T {
+func (a Slice[T]) Reduce(fn func(prev T, curr T, index int) T, init T) T {
 	var res = init
 	for i := 0; i < len(a.src); i++ {
 		res = fn(res, a.src[i], i)
@@ -352,12 +352,12 @@ func (a Array[T]) Reduce(fn func(prev T, curr T, index int) T, init T) T {
 	return res
 }
 
-func (a Array[T]) Sort(fn func(a T, b T) bool) {
+func (a Slice[T]) Sort(fn func(a T, b T) bool) {
 	sort.Slice(a.src, func(i, j int) bool {
 		return fn(a.src[i], a.src[j])
 	})
 }
 
-func (a Array[T]) Data() []T {
+func (a Slice[T]) Data() []T {
 	return a.src
 }

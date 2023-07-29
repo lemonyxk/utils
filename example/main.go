@@ -11,7 +11,7 @@
 package main
 
 import (
-	"github.com/lemonyxk/utils/array"
+	"github.com/lemonyxk/utils/crypto"
 	"log"
 )
 
@@ -25,9 +25,23 @@ type B struct {
 
 func main() {
 
-	var test []*A
+	var secretKey = crypto.GenerateKey(1024)
 
-	log.Println(array.Any(test).First() == nil)
+	var publicKey = crypto.GeneratePublicKey(secretKey)
+
+	var bts, err = crypto.RsaEncrypt([]byte(publicKey), []byte("hello world"))
+	if err != nil {
+		panic(err)
+	}
+
+	log.Println(string(bts))
+
+	var bts2, err2 = crypto.RsaDecrypt([]byte(secretKey), bts)
+	if err2 != nil {
+		panic(err2)
+	}
+
+	log.Println(string(bts2))
 
 	// log.Println(utils.Sort(1, 2, -1).Asc(1))
 	// log.Println(utils.Sort(1, 2, -1).Desc())

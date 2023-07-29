@@ -1,14 +1,14 @@
 /**
-* @program: lemo
+* @program: lemon
 *
 * @description:
 *
-* @author: lemo
+* @author: lemon
 *
 * @create: 2019-12-26 19:29
 **/
 
-package utils
+package system
 
 import (
 	"fmt"
@@ -16,13 +16,9 @@ import (
 	"runtime"
 )
 
-type system int
-
-const System system = iota
-
 var ch = make(chan int)
 
-func (system system) OpenBrowser(url string) error {
+func OpenBrowser(url string) error {
 	var err error
 	switch runtime.GOOS {
 	case "linux":
@@ -37,10 +33,10 @@ func (system system) OpenBrowser(url string) error {
 	return err
 }
 
-func (system system) Exit(code int) {
+func Exit(code int) {
 	ch <- code
 }
 
-func (system system) Block() int {
+func Block() int {
 	return <-ch
 }

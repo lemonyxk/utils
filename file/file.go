@@ -1,14 +1,14 @@
 /**
-* @program: lemo
+* @program: lemon
 *
 * @description:
 *
-* @author: lemo
+* @author: lemon
 *
 * @create: 2020-01-02 15:59
 **/
 
-package utils
+package file
 
 import (
 	"bytes"
@@ -18,37 +18,33 @@ import (
 	"strings"
 )
 
-type fi int
-
-const File fi = iota
-
-type fileInfo struct {
+type Info struct {
 	reader io.Reader
 	err    error
 }
 
-func (fi fi) IsExist(path string) bool {
+func Exist(path string) bool {
 	_, err := os.Stat(path)
 	return !os.IsNotExist(err)
 }
 
-func (fi fi) ReadFromBytes(bts []byte) fileInfo {
-	return fileInfo{err: nil, reader: bytes.NewReader(bts)}
+func FromBytes(bts []byte) Info {
+	return Info{err: nil, reader: bytes.NewReader(bts)}
 }
 
-func (fi fi) ReadFromString(str string) fileInfo {
-	return fileInfo{err: nil, reader: strings.NewReader(str)}
+func FromString(str string) Info {
+	return Info{err: nil, reader: strings.NewReader(str)}
 }
 
-func (fi fi) ReadFromReader(r io.Reader) fileInfo {
-	return fileInfo{err: nil, reader: r}
+func FromReader(r io.Reader) Info {
+	return Info{err: nil, reader: r}
 }
 
-func (i fileInfo) Error() error {
+func (i Info) Error() error {
 	return i.err
 }
 
-func (i fileInfo) Bytes() []byte {
+func (i Info) Bytes() []byte {
 	if i.err != nil {
 		return nil
 	}
@@ -59,7 +55,7 @@ func (i fileInfo) Bytes() []byte {
 	return bts
 }
 
-func (i fileInfo) String() string {
+func (i Info) String() string {
 	if i.err != nil {
 		return ""
 	}
@@ -70,7 +66,7 @@ func (i fileInfo) String() string {
 	return string(bts)
 }
 
-func (i fileInfo) WriteToPath(path string) error {
+func (i Info) WriteToPath(path string) error {
 	if i.err != nil {
 		return i.err
 	}
@@ -94,7 +90,7 @@ func (i fileInfo) WriteToPath(path string) error {
 	return nil
 }
 
-func (i fileInfo) WriteToReader(w io.Writer) error {
+func (i Info) WriteToReader(w io.Writer) error {
 	if i.err != nil {
 		return i.err
 	}

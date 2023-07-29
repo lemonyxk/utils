@@ -2,39 +2,35 @@
 // +build aix darwin dragonfly freebsd linux netbsd openbsd solaris
 
 /**
-* @program: lemo
+* @program: lemon
 *
 * @description:
 *
-* @author: lemo
+* @author: lemon
 *
 * @create: 2020-01-02 19:05
 **/
 
-package utils
+package cmd
 
 import (
 	"os/exec"
 	"strings"
 )
 
-type cm int
-
-const Cmd cm = iota
-
-type cmd struct {
+type Cmd struct {
 	c *exec.Cmd
 }
 
-func (cm cm) New(command string) *cmd {
+func New(command string) *Cmd {
 	var arr = strings.Split(command, " ")
 	if len(arr) == 0 {
 		panic("command is empty")
 	}
 	var c = exec.Command(arr[0], arr[1:]...)
-	return &cmd{c: c}
+	return &Cmd{c: c}
 }
 
-func (c *cmd) Cmd() *exec.Cmd {
+func (c *Cmd) Cmd() *exec.Cmd {
 	return c.c
 }

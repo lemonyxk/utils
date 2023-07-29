@@ -1,4 +1,4 @@
-package utils
+package address
 
 import (
 	"encoding/binary"
@@ -10,11 +10,7 @@ import (
 
 var defaultIP = ""
 
-type addr int
-
-const Addr addr = iota
-
-func (a addr) GetLocalhostIp() string {
+func LocalhostIP() string {
 
 	if defaultIP != "" {
 		return defaultIP
@@ -41,7 +37,7 @@ func (a addr) GetLocalhostIp() string {
 	return defaultIP
 }
 
-func (a addr) Ip2long(ipStr string) uint32 {
+func IP2long(ipStr string) uint32 {
 	ip := net.ParseIP(ipStr)
 	if ip == nil {
 		return 0
@@ -50,8 +46,8 @@ func (a addr) Ip2long(ipStr string) uint32 {
 	return binary.BigEndian.Uint32(ip)
 }
 
-func (a addr) IsLocalIP(ip string) bool {
-	return a.IsLocalNet(net.ParseIP(ip))
+func IsLocalIP(ip string) bool {
+	return IsLocalNet(net.ParseIP(ip))
 }
 
 // var localNetworks = []string{
@@ -76,7 +72,7 @@ func (a addr) IsLocalIP(ip string) bool {
 // 	"192.168.0.0/16",
 // }
 
-func (a addr) IsLocalNet(ip net.IP) bool {
+func IsLocalNet(ip net.IP) bool {
 
 	if ip.IsLoopback() || ip.IsLinkLocalMulticast() || ip.IsLinkLocalUnicast() {
 		return true
@@ -94,7 +90,7 @@ func (a addr) IsLocalNet(ip net.IP) bool {
 
 }
 
-func (a addr) Parse(host string) (string, int, error) {
+func Parse(host string) (string, int, error) {
 
 	var u = strings.Split(host, ":")
 
@@ -107,7 +103,10 @@ func (a addr) Parse(host string) (string, int, error) {
 	}
 
 	var ip = u[0]
-	var port, _ = strconv.Atoi(u[1])
+	var port, err = strconv.Atoi(u[1])
+	if err != nil {
+		return "", 0, err
+	}
 
 	return ip, port, nil
 }

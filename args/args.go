@@ -3,20 +3,16 @@
 *
 * @description:
 *
-* @author: lemo
+* @author: lemon
 *
 * @create: 2023-04-19 17:33
 **/
 
-package utils
+package args
 
 import "os"
 
-type args int
-
-const Args args = iota
-
-func (args) Get(flag ...string) string {
+func Get(flag ...string) string {
 	var args = os.Args[1:]
 	for i := 0; i < len(args); i++ {
 		for j := 0; j < len(flag); j++ {
@@ -30,7 +26,7 @@ func (args) Get(flag ...string) string {
 	return ""
 }
 
-func (args) Has(flag ...string) bool {
+func Has(flag ...string) bool {
 	var args = os.Args[1:]
 	for i := 0; i < len(args); i++ {
 		for j := 0; j < len(flag); j++ {

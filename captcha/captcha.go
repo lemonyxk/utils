@@ -1,18 +1,19 @@
 /**
-* @program: lemo
+* @program: lemon
 *
 * @description:
 *
-* @author: lemo
+* @author: lemon
 *
 * @create: 2019-12-16 16:32
 **/
 
-package utils
+package captcha
 
 import (
 	"bytes"
 	"encoding/base64"
+	rand2 "github.com/lemonyxk/utils/rand"
 	"image"
 	"image/color"
 	"image/png"
@@ -23,15 +24,11 @@ import (
 	"time"
 )
 
-type captcha int
-
-const Captcha captcha = iota
-
 // RandomCreateBytes generate random []byte by specify chars.
 func randomNumber(n int) []byte {
 	var bts = make([]byte, n)
 	var numbers = []byte{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
-	rand.Seed(time.Now().UnixNano())
+	rand.New(rand.NewSource(time.Now().UnixNano()))
 	for i := range bts {
 		bts[i] = numbers[rand.Intn(len(numbers))]
 	}
@@ -266,17 +263,17 @@ type img struct {
 
 // randIntn returns a pseudorandom non-negative int in range [0, n).
 func randIntn(n int) int {
-	return Rand.RandomIntn(0, n)
+	return rand2.Rand.RandomIntn(0, n)
 }
 
 // randInt returns a pseudorandom int in range [from, to].
 func randInt(from, to int) int {
-	return Rand.RandomIntn(from, to)
+	return rand2.Rand.RandomIntn(from, to)
 }
 
 // randFloat returns a pseudorandom float64 in range [from, to].
 func randFloat(from, to float64) float64 {
-	return Rand.RandomFloat64n(from, to)
+	return rand2.Rand.RandomFloat64n(from, to)
 }
 
 func randomPalette() color.Palette {
@@ -300,7 +297,7 @@ func randomPalette() color.Palette {
 
 // New returns a new captcha image of the given width and height with the
 // given digits, where each digit must be in range 0-9.
-func (captcha captcha) New(width, height int) *img {
+func New(width, height int) *img {
 	digits := randomNumber(4)
 	m := new(img)
 	m.digits = digits

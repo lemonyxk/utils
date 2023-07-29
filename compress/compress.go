@@ -3,39 +3,36 @@
 *
 * @description:
 *
-* @author: lemo
+* @author: lemon
 *
 * @create: 2022-05-29 09:43
 **/
 
-package utils
+package compress
 
 import (
 	"archive/tar"
 	zip2 "archive/zip"
 	"compress/gzip"
 	"errors"
+	"github.com/lemonyxk/utils/dir"
 	"io"
 	"os"
 	"path"
 	"path/filepath"
 )
 
-const Compress compress = iota
-
-type compress int
-
-type srcPath struct {
+type Src struct {
 	absPath string
 	err     error
 }
 
-func (c compress) From(path string) *srcPath {
+func New(path string) *Src {
 	var asbPath, err = filepath.Abs(path)
-	return &srcPath{absPath: asbPath, err: err}
+	return &Src{absPath: asbPath, err: err}
 }
 
-func (s *srcPath) Zip(dst string) error {
+func (s *Src) Zip(dst string) error {
 	if s.err != nil {
 		return s.err
 	}
@@ -65,7 +62,7 @@ func (s *srcPath) Zip(dst string) error {
 
 	// is dir
 	if fStat.IsDir() {
-		var files = Dir.New(s.absPath).ReadAll()
+		var files = dir.Dir.New(s.absPath).ReadAll()
 
 		fw, err := os.Create(absPath)
 		defer func() { _ = fw.Close() }()
@@ -136,7 +133,7 @@ func doZip(dst, path string, fi os.FileInfo, zw *zip2.Writer) error {
 	return nil
 }
 
-func (s *srcPath) UnZip(dst string) error {
+func (s *Src) UnZip(dst string) error {
 
 	if s.err != nil {
 		return s.err
@@ -197,7 +194,7 @@ func doUnzip(cf []*zip2.File, absPath string) error {
 	return nil
 }
 
-func (s *srcPath) TarGz(dst string) error {
+func (s *Src) TarGz(dst string) error {
 	if s.err != nil {
 		return s.err
 	}
@@ -227,7 +224,7 @@ func (s *srcPath) TarGz(dst string) error {
 
 	// is dir
 	if fStat.IsDir() {
-		var files = Dir.New(s.absPath).ReadAll()
+		var files = dir.Dir.New(s.absPath).ReadAll()
 
 		fw, err := os.Create(absPath)
 		defer func() { _ = fw.Close() }()
@@ -302,7 +299,7 @@ func doTarGz(dst, path string, fi os.FileInfo, zw *tar.Writer) error {
 	return nil
 }
 
-func (s *srcPath) UnTarGz(dst string) error {
+func (s *Src) UnTarGz(dst string) error {
 
 	if s.err != nil {
 		return s.err

@@ -2,16 +2,16 @@
 // +build aix darwin dragonfly freebsd linux netbsd openbsd solaris
 
 /**
-* @program: lemo
+* @program: lemon
 *
 * @description:
 *
-* @author: lemo
+* @author: lemon
 *
 * @create: 2019-10-22 17:44
 **/
 
-package utils
+package signal
 
 import (
 	"os"
@@ -19,20 +19,16 @@ import (
 	"syscall"
 )
 
-type sig int
-
-const Signal sig = iota
-
-type done struct {
+type Done struct {
 	fn func(func(sig os.Signal))
 }
 
-func (d *done) Done(fn func(sig os.Signal)) {
+func (d *Done) Done(fn func(sig os.Signal)) {
 	d.fn(fn)
 }
 
 // ListenAll listen all signal
-func (s sig) ListenAll() *done {
+func ListenAll() *Done {
 	var signalList = []os.Signal{
 		syscall.SIGABRT, syscall.SIGALRM, syscall.SIGBUS, syscall.SIGCHLD, syscall.SIGCONT,
 		syscall.SIGFPE, syscall.SIGHUP, syscall.SIGILL, syscall.SIGINT, syscall.SIGIO,
@@ -43,36 +39,36 @@ func (s sig) ListenAll() *done {
 	}
 	signalChan := make(chan os.Signal, 1)
 	signal.Notify(signalChan, signalList...)
-	return &done{fn: func(f func(signal os.Signal)) {
+	return &Done{fn: func(f func(signal os.Signal)) {
 		f(<-signalChan)
 		signal.Stop(signalChan)
 	}}
 }
 
-func (s sig) ListenKill() *done {
+func ListenKill() *Done {
 	var signalList = []os.Signal{syscall.SIGINT, syscall.SIGTERM}
 	signalChan := make(chan os.Signal, 1)
 	signal.Notify(signalChan, signalList...)
-	return &done{fn: func(f func(signal os.Signal)) {
+	return &Done{fn: func(f func(signal os.Signal)) {
 		f(<-signalChan)
 		signal.Stop(signalChan)
 	}}
 }
 
-func (s sig) Listen(sig ...os.Signal) *done {
+func Listen(sig ...os.Signal) *Done {
 	var signalList = sig
 	signalChan := make(chan os.Signal, 1)
 	signal.Notify(signalChan, signalList...)
-	return &done{fn: func(f func(signal os.Signal)) {
+	return &Done{fn: func(f func(signal os.Signal)) {
 		f(<-signalChan)
 		signal.Stop(signalChan)
 	}}
 }
 
-func (s sig) Signal(pid int, sig syscall.Signal) error {
+func Signal(pid int, sig syscall.Signal) error {
 	return syscall.Kill(pid, sig)
 }
 
-func (s sig) KillGroup(pid int, sig syscall.Signal) error {
+func KillGroup(pid int, sig syscall.Signal) error {
 	return syscall.Kill(-pid, sig)
 }

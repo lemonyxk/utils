@@ -1,32 +1,36 @@
 /**
-* @program: lemo
+* @program: lemon
 *
 * @description:
 *
-* @author: lemo
+* @author: lemon
 *
 * @create: 2019-11-05 11:42
 **/
 
-package utils
+package structure
 
 import (
 	"github.com/mitchellh/mapstructure"
 )
 
-type structure struct {
+type Config struct {
 	TagName string
 }
 
-var Struct = structure{
+var defaultConfig = Config{
 	TagName: "json",
 }
 
-func (d structure) WeakDecode(input any, output any) error {
+func SetConfig(config Config) {
+	defaultConfig = config
+}
+
+func WeakDecode(input any, output any) error {
 	config := &mapstructure.DecoderConfig{
 		Metadata:         nil,
 		Result:           output,
-		TagName:          d.TagName,
+		TagName:          defaultConfig.TagName,
 		WeaklyTypedInput: true,
 	}
 
@@ -38,11 +42,11 @@ func (d structure) WeakDecode(input any, output any) error {
 	return decoder.Decode(input)
 }
 
-func (d structure) Decode(input any, output any) error {
+func Decode(input any, output any) error {
 	config := &mapstructure.DecoderConfig{
 		Metadata: nil,
 		Result:   output,
-		TagName:  d.TagName,
+		TagName:  defaultConfig.TagName,
 	}
 
 	decoder, err := mapstructure.NewDecoder(config)

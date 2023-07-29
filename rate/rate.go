@@ -3,12 +3,12 @@
 *
 * @description:
 *
-* @author: lemo
+* @author: lemon
 *
 * @create: 2021-11-07 18:10
 **/
 
-package utils
+package rate
 
 import (
 	"sync"
@@ -16,11 +16,7 @@ import (
 	rate2 "golang.org/x/time/rate"
 )
 
-type rate int
-
-const Rate rate = iota
-
-func (r rate) New() *Limiter {
+func New() *Limiter {
 	return &Limiter{keys: make(map[string]*Allow)}
 }
 

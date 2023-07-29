@@ -1,57 +1,53 @@
 /**
-* @program: lemo
+* @program: lemon
 *
 * @description:
 *
-* @author: lemo
+* @author: lemon
 *
 * @create: 2019-12-16 21:24
 **/
 
-package utils
+package conv
 
 import (
 	"strconv"
 	"unsafe"
 )
 
-type conv int
-
-const Conv conv = iota
-
-func (c conv) Itoa(i int) string {
+func Itoa(i int) string {
 	return strconv.Itoa(i)
 }
 
-func (c conv) Atoi(i string) int {
+func Atoi(i string) int {
 	var n, _ = strconv.Atoi(i)
 	return n
 }
 
-func (c conv) StringToBytes(s string) []byte {
+func StringToBytes(s string) []byte {
 	x := (*[2]uintptr)(unsafe.Pointer(&s))
 	h := [3]uintptr{x[0], x[1], x[1]}
 	return *(*[]byte)(unsafe.Pointer(&h))
 }
 
-func (c conv) BytesToString(b []byte) string {
+func BytesToString(b []byte) string {
 	return *(*string)(unsafe.Pointer(&b))
 }
 
-func (c conv) Float64ToString(i float64) string {
+func Float64ToString(i float64) string {
 	return strconv.FormatFloat(i, 'f', -1, 64)
 }
 
-func (c conv) Float32ToString(i float64) string {
+func Float32ToString(i float64) string {
 	return strconv.FormatFloat(i, 'f', -1, 32)
 }
 
-func (c conv) StringToFloat64(i string) float64 {
+func StringToFloat64(i string) float64 {
 	var n, _ = strconv.ParseFloat(i, 64)
 	return n
 }
 
-func (c conv) StringToFloat32(i string) float64 {
+func StringToFloat32(i string) float64 {
 	var n, _ = strconv.ParseFloat(i, 32)
 	return n
 }

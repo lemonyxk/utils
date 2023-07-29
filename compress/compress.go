@@ -62,7 +62,7 @@ func (s *Src) Zip(dst string) error {
 
 	// is dir
 	if fStat.IsDir() {
-		var files = dir.Dir.New(s.absPath).ReadAll()
+		var files = dir.New(s.absPath).ReadAll()
 
 		fw, err := os.Create(absPath)
 		defer func() { _ = fw.Close() }()
@@ -224,7 +224,7 @@ func (s *Src) TarGz(dst string) error {
 
 	// is dir
 	if fStat.IsDir() {
-		var files = dir.Dir.New(s.absPath).ReadAll()
+		var files = dir.New(s.absPath).ReadAll()
 
 		fw, err := os.Create(absPath)
 		defer func() { _ = fw.Close() }()

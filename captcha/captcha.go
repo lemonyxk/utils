@@ -263,17 +263,17 @@ type img struct {
 
 // randIntn returns a pseudorandom non-negative int in range [0, n).
 func randIntn(n int) int {
-	return rand2.Rand.RandomIntn(0, n)
+	return rand2.RandomIntn(0, n)
 }
 
 // randInt returns a pseudorandom int in range [from, to].
 func randInt(from, to int) int {
-	return rand2.Rand.RandomIntn(from, to)
+	return rand2.RandomIntn(from, to)
 }
 
 // randFloat returns a pseudorandom float64 in range [from, to].
 func randFloat(from, to float64) float64 {
-	return rand2.Rand.RandomFloat64n(from, to)
+	return rand2.RandomFloat64n(from, to)
 }
 
 func randomPalette() color.Palette {

@@ -22,6 +22,10 @@ type Integer interface {
 	Signed | Unsigned
 }
 
+type Number interface {
+	Integer | Float
+}
+
 type Float interface {
 	~float32 | ~float64
 }

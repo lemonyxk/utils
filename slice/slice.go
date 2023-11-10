@@ -186,6 +186,34 @@ func (a Slice[T, E]) Filter(fn func(elem E, index int) bool) T {
 	return res
 }
 
+func (a Slice[T, E]) Some(fn func(elem E, index int) bool) bool {
+	for i := 0; i < len(a.src); i++ {
+		if fn(a.src[i], i) {
+			return true
+		}
+	}
+	return false
+}
+
+func (a Slice[T, E]) Every(fn func(elem E, index int) bool) bool {
+	for i := 0; i < len(a.src); i++ {
+		if !fn(a.src[i], i) {
+			return false
+		}
+	}
+	return true
+}
+
+func (a Slice[T, E]) Find(fn func(elem E, index int) bool) E {
+	for i := 0; i < len(a.src); i++ {
+		if fn(a.src[i], i) {
+			return a.src[i]
+		}
+	}
+	var zero E
+	return zero
+}
+
 func (a Slice[T, E]) Reduce(fn func(prev E, curr E, index int) E, init E) E {
 	var res = init
 	for i := 0; i < len(a.src); i++ {

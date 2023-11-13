@@ -168,14 +168,6 @@ func (a Slice[T, E]) ForEach(fn func(elem E, index int)) {
 	}
 }
 
-func (a Slice[T, E]) Map(fn func(elem E, index int) E) T {
-	var res T
-	for i := 0; i < len(a.src); i++ {
-		res = append(res, fn(a.src[i], i))
-	}
-	return res
-}
-
 func (a Slice[T, E]) Filter(fn func(elem E, index int) bool) T {
 	var res T
 	for i := 0; i < len(a.src); i++ {

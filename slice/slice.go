@@ -105,7 +105,7 @@ func (a Slice[T, E]) Insert(start int, elem ...E) {
 	a.src = append(a.src, p2...)
 }
 
-func (a Slice[T, E]) Delete(start int, count int) {
+func (a Slice[T, E]) DeleteFrom(start int, count int) {
 
 	if start < 0 {
 		panic("start must be greater than 0")
@@ -126,6 +126,14 @@ func (a Slice[T, E]) Delete(start int, count int) {
 
 	a.src = append(a.src, p1...)
 	a.src = append(a.src, p2...)
+}
+
+func (a Slice[T, E]) Length() int {
+	return len(a.src)
+}
+
+func (a Slice[T, E]) DeleteAt(index int) {
+	a.src = append(a.src[:index], a.src[index+1:]...)
 }
 
 func (a Slice[T, E]) Push(elem ...E) {

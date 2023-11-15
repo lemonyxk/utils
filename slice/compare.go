@@ -18,6 +18,16 @@ type Comparable[T ~[]E, E comparable] struct {
 	Slice[T, E]
 }
 
+func (a Comparable[T, E]) Remove(s E) T {
+	var res T
+	for i := 0; i < len(a.src); i++ {
+		if a.src[i] != s {
+			res = append(res, a.src[i])
+		}
+	}
+	return res
+}
+
 func (a Comparable[T, E]) Has(s E) bool {
 	for i := 0; i < len(a.src); i++ {
 		if a.src[i] == s {

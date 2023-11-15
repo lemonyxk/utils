@@ -223,3 +223,7 @@ func (a Slice[T, E]) Sort(fn func(a E, b E) bool) {
 func (a Slice[T, E]) Data() T {
 	return a.src
 }
+
+func (a Slice[T, E]) Set(t T) {
+	a.src = t
+}

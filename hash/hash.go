@@ -17,21 +17,21 @@ import (
 )
 
 type Hash[K comparable, V any] struct {
-	mux sync.RWMutex
+	mux *sync.RWMutex
 	src map[K]V
 }
 
 func Any[K comparable, V any](src map[K]V) Hash[K, V] {
-	return Hash[K, V]{src: src}
+	return Hash[K, V]{src: src, mux: &sync.RWMutex{}}
 }
 
-func (a *Hash[K, V]) Len() int {
+func (a Hash[K, V]) Len() int {
 	a.mux.RLock()
 	defer a.mux.RUnlock()
 	return len(a.src)
 }
 
-func (a *Hash[K, V]) Keys() []K {
+func (a Hash[K, V]) Keys() []K {
 	a.mux.RLock()
 	defer a.mux.RUnlock()
 	var keys []K
@@ -41,7 +41,7 @@ func (a *Hash[K, V]) Keys() []K {
 	return keys
 }
 
-func (a *Hash[K, V]) Values() []V {
+func (a Hash[K, V]) Values() []V {
 	a.mux.RLock()
 	defer a.mux.RUnlock()
 	var values []V
@@ -51,7 +51,7 @@ func (a *Hash[K, V]) Values() []V {
 	return values
 }
 
-func (a *Hash[K, V]) ForEach(fn func(k K, v V)) {
+func (a Hash[K, V]) ForEach(fn func(k K, v V)) {
 	a.mux.RLock()
 	defer a.mux.RUnlock()
 	for k, v := range a.src {
@@ -59,25 +59,25 @@ func (a *Hash[K, V]) ForEach(fn func(k K, v V)) {
 	}
 }
 
-func (a *Hash[K, V]) Get(k K) V {
+func (a Hash[K, V]) Get(k K) V {
 	a.mux.RLock()
 	defer a.mux.RUnlock()
 	return a.src[k]
 }
 
-func (a *Hash[K, V]) Set(k K, v V) {
+func (a Hash[K, V]) Set(k K, v V) {
 	a.mux.Lock()
 	defer a.mux.Unlock()
 	a.src[k] = v
 }
 
-func (a *Hash[K, V]) Delete(k K) {
+func (a Hash[K, V]) Delete(k K) {
 	a.mux.Lock()
 	defer a.mux.Unlock()
 	delete(a.src, k)
 }
 
-func (a *Hash[K, V]) Filter(fn func(k K, v V) bool) Hash[K, V] {
+func (a Hash[K, V]) Filter(fn func(k K, v V) bool) Hash[K, V] {
 	a.mux.RLock()
 	defer a.mux.RUnlock()
 	var result = make(map[K]V)
@@ -89,7 +89,7 @@ func (a *Hash[K, V]) Filter(fn func(k K, v V) bool) Hash[K, V] {
 	return Hash[K, V]{src: result}
 }
 
-func (a *Hash[K, V]) Data() map[K]V {
+func (a Hash[K, V]) Data() map[K]V {
 	a.mux.RLock()
 	defer a.mux.RUnlock()
 	return a.src
@@ -100,7 +100,7 @@ type Compare[K comparable, V comparable] struct {
 }
 
 func Comparable[K comparable, V comparable](src map[K]V) Compare[K, V] {
-	return Compare[K, V]{Hash[K, V]{src: src}}
+	return Compare[K, V]{Hash[K, V]{src: src, mux: &sync.RWMutex{}}}
 }
 
 func (a *Compare[K, V]) Unique(src map[K]V) Compare[K, V] {
@@ -157,7 +157,7 @@ type Order[K comparable, V constraints.Ordered] struct {
 }
 
 func Ordered[K comparable, V constraints.Ordered](src map[K]V) Order[K, V] {
-	return Order[K, V]{Hash[K, V]{src: src}}
+	return Order[K, V]{Hash[K, V]{src: src, mux: &sync.RWMutex{}}}
 }
 
 func (a *Order[K, V]) Sort(fn func(a, b K) bool) []V {
@@ -190,23 +190,23 @@ func (a *Order[K, V]) Sum() V {
 func (a *Order[K, V]) Max() V {
 	a.mux.RLock()
 	defer a.mux.RUnlock()
-	var max V
+	var m V
 	for _, v := range a.src {
-		if v > max {
-			max = v
+		if v > m {
+			m = v
 		}
 	}
-	return max
+	return m
 }
 
 func (a *Order[K, V]) Min() V {
 	a.mux.RLock()
 	defer a.mux.RUnlock()
-	var min V
+	var m V
 	for _, v := range a.src {
-		if v < min {
-			min = v
+		if v < m {
+			m = v
 		}
 	}
-	return min
+	return m
 }

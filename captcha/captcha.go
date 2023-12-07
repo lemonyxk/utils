@@ -24,8 +24,8 @@ import (
 	"time"
 )
 
-// RandomCreateBytes generate random []byte by specify chars.
-func randomNumber(n int) []byte {
+// CreateRandomBytes generate random []byte by specify chars.
+func CreateRandomBytes(n int) []byte {
 	var bts = make([]byte, n)
 	var numbers = []byte{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
 	rand.New(rand.NewSource(time.Now().UnixNano()))
@@ -33,6 +33,15 @@ func randomNumber(n int) []byte {
 		bts[i] = numbers[rand.Intn(len(numbers))]
 	}
 	return bts
+}
+
+// ConvertBytesToString convert []byte to string.
+func ConvertBytesToString(bts []byte) string {
+	var buf bytes.Buffer
+	for i := 0; i < len(bts); i++ {
+		buf.WriteString(strconv.Itoa(int(bts[i])))
+	}
+	return buf.String()
 }
 
 const (
@@ -298,7 +307,38 @@ func randomPalette() color.Palette {
 // New returns a new captcha image of the given width and height with the
 // given digits, where each digit must be in range 0-9.
 func New(width, height int) *img {
-	digits := randomNumber(4)
+	digits := CreateRandomBytes(4)
+	m := new(img)
+	m.digits = digits
+	m.Paletted = image.NewPaletted(image.Rect(0, 0, width, height), randomPalette())
+	m.calculateSizes(width, height, len(digits))
+	// Randomly position captcha inside the image.
+	maxX := width - (m.numWidth+m.dotSize)*len(digits) - m.dotSize
+	maxY := height - m.numHeight - m.dotSize*2
+	var border int
+	if width > height {
+		border = height / 5
+	} else {
+		border = width / 5
+	}
+	x := randInt(border, maxX-border)
+	y := randInt(border, maxY-border)
+	// Draw digits.
+	for _, n := range digits {
+		m.drawDigit(font[n], x, y)
+		x += m.numWidth + m.dotSize
+	}
+	// Apply wave distortion.
+	m.distort(randFloat(5, 10), randFloat(100, 200))
+	// Fill image with random circles.
+	m.fillWithCircles(circleCount, m.dotSize)
+	return m
+}
+
+func NewWithDigits(width, height int, digits []byte) *img {
+	if len(digits) != 4 {
+		panic("digits length must be 4")
+	}
 	m := new(img)
 	m.digits = digits
 	m.Paletted = image.NewPaletted(image.Rect(0, 0, width, height), randomPalette())

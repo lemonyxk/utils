@@ -103,7 +103,7 @@ func Comparable[K comparable, V comparable](src map[K]V) Compare[K, V] {
 	return Compare[K, V]{Hash[K, V]{src: src, mux: &sync.RWMutex{}}}
 }
 
-func (a *Compare[K, V]) Unique(src map[K]V) Compare[K, V] {
+func (a Compare[K, V]) Unique(src map[K]V) Compare[K, V] {
 	a.mux.RLock()
 	defer a.mux.RUnlock()
 	var result = make(map[K]V)
@@ -115,7 +115,7 @@ func (a *Compare[K, V]) Unique(src map[K]V) Compare[K, V] {
 	return Compare[K, V]{Hash[K, V]{src: result}}
 }
 
-func (a *Compare[K, V]) Union(src map[K]V) Compare[K, V] {
+func (a Compare[K, V]) Union(src map[K]V) Compare[K, V] {
 	a.mux.RLock()
 	defer a.mux.RUnlock()
 	var result = make(map[K]V)
@@ -128,7 +128,7 @@ func (a *Compare[K, V]) Union(src map[K]V) Compare[K, V] {
 	return Compare[K, V]{Hash[K, V]{src: result}}
 }
 
-func (a *Compare[K, V]) Intersect(src map[K]V) Compare[K, V] {
+func (a Compare[K, V]) Intersect(src map[K]V) Compare[K, V] {
 	a.mux.RLock()
 	defer a.mux.RUnlock()
 	var result = make(map[K]V)
@@ -140,7 +140,7 @@ func (a *Compare[K, V]) Intersect(src map[K]V) Compare[K, V] {
 	return Compare[K, V]{Hash[K, V]{src: result}}
 }
 
-func (a *Compare[K, V]) Diff(src map[K]V) Compare[K, V] {
+func (a Compare[K, V]) Diff(src map[K]V) Compare[K, V] {
 	a.mux.RLock()
 	defer a.mux.RUnlock()
 	var result = make(map[K]V)
@@ -160,7 +160,7 @@ func Ordered[K comparable, V constraints.Ordered](src map[K]V) Order[K, V] {
 	return Order[K, V]{Hash[K, V]{src: src, mux: &sync.RWMutex{}}}
 }
 
-func (a *Order[K, V]) Sort(fn func(a, b K) bool) []V {
+func (a Order[K, V]) Sort(fn func(a, b K) bool) []V {
 	a.mux.RLock()
 	defer a.mux.RUnlock()
 	var keys []K
@@ -177,7 +177,7 @@ func (a *Order[K, V]) Sort(fn func(a, b K) bool) []V {
 	return result
 }
 
-func (a *Order[K, V]) Sum() V {
+func (a Order[K, V]) Sum() V {
 	a.mux.RLock()
 	defer a.mux.RUnlock()
 	var sum V
@@ -187,7 +187,7 @@ func (a *Order[K, V]) Sum() V {
 	return sum
 }
 
-func (a *Order[K, V]) Max() V {
+func (a Order[K, V]) Max() V {
 	a.mux.RLock()
 	defer a.mux.RUnlock()
 	var m V
@@ -199,7 +199,7 @@ func (a *Order[K, V]) Max() V {
 	return m
 }
 
-func (a *Order[K, V]) Min() V {
+func (a Order[K, V]) Min() V {
 	a.mux.RLock()
 	defer a.mux.RUnlock()
 	var m V

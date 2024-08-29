@@ -3,7 +3,6 @@ module github.com/lemonyxk/utils
 go 1.20
 
 require (
-	github.com/goccy/go-json v0.10.3
 	github.com/json-iterator/go v1.1.12
 	github.com/mitchellh/mapstructure v1.5.0
 	golang.org/x/time v0.3.0

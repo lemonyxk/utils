@@ -11,8 +11,7 @@
 package json
 
 import (
-	"github.com/goccy/go-json"
-	"github.com/json-iterator/go"
+	json "github.com/json-iterator/go"
 )
 
 func Encode(v any) []byte {
@@ -28,22 +27,22 @@ func Decode(data []byte, output any) error {
 }
 
 type Result struct {
-	any jsoniter.Any
+	any json.Any
 }
 
 func New(v any) Result {
-	return Result{any: jsoniter.Get(Encode(v))}
+	return Result{any: json.Get(Encode(v))}
 }
 
 func Bytes(v []byte) Result {
-	return Result{any: jsoniter.Get(v)}
+	return Result{any: json.Get(v)}
 }
 
 func String(v string) Result {
-	return Result{any: jsoniter.Get([]byte(v))}
+	return Result{any: json.Get([]byte(v))}
 }
 
-func (r Result) Any() jsoniter.Any {
+func (r Result) Any() json.Any {
 	return r.any
 }
 
@@ -84,7 +83,7 @@ func (r Result) Interface() any {
 }
 
 func (r Result) Array() Results {
-	var results []jsoniter.Any
+	var results []json.Any
 	var val = r.any
 	for i := 0; i < val.Size(); i++ {
 		results = append(results, val.Get(i))
@@ -92,7 +91,7 @@ func (r Result) Array() Results {
 	return results
 }
 
-type Results []jsoniter.Any
+type Results []json.Any
 
 func (a Results) String() []string {
 	var result []string
@@ -119,7 +118,7 @@ func (a Results) Float64() []float64 {
 }
 
 func (a Results) Get(path ...any) Results {
-	var result []jsoniter.Any
+	var result []json.Any
 	for i := 0; i < len(a); i++ {
 		result = append(result, a[i].Get(path...))
 	}

@@ -11,11 +11,12 @@
 package json
 
 import (
+	"github.com/goccy/go-json"
 	"github.com/json-iterator/go"
 )
 
 func Encode(v any) []byte {
-	res, err := jsoniter.Marshal(v)
+	res, err := json.Marshal(v)
 	if err != nil {
 		return nil
 	}
@@ -23,7 +24,7 @@ func Encode(v any) []byte {
 }
 
 func Decode(data []byte, output any) error {
-	return jsoniter.Unmarshal(data, output)
+	return json.Unmarshal(data, output)
 }
 
 type Result struct {

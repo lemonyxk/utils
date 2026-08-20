@@ -18,6 +18,23 @@ type Slice[T ~[]E, E any] struct {
 	src T
 }
 
+func (a Slice[T, E]) Map[P any](fn func(E) P) []P {
+	var res []P
+	for _, v := range a.src {
+		res = append(res, fn(v))
+	}
+	return res
+}
+
+func (a Slice[T, E]) Hash[K comparable, V any](fn func(E) (K, V)) map[K]V {
+	res := make(map[K]V)
+	for _, v := range a.src {
+		k, val := fn(v)
+		res[k] = val
+	}
+	return res
+}
+
 func (a Slice[T, E]) First() E {
 	if len(a.src) == 0 {
 		var zero E

@@ -11,9 +11,10 @@
 package hash
 
 import (
-	"github.com/lemonyxk/utils/constraints"
 	"sort"
 	"sync"
+
+	"github.com/lemonyxk/utils/constraints"
 )
 
 type Hash[K comparable, V any] struct {
@@ -23,6 +24,27 @@ type Hash[K comparable, V any] struct {
 
 func Any[K comparable, V any](src map[K]V) Hash[K, V] {
 	return Hash[K, V]{src: src, mux: &sync.RWMutex{}}
+}
+
+func (a Hash[K, V]) Map[T any](fn func(k K, v V) T) []T {
+	a.mux.RLock()
+	defer a.mux.RUnlock()
+	var result []T
+	for k, v := range a.src {
+		result = append(result, fn(k, v))
+	}
+	return result
+}
+
+func (a Hash[K, V]) Hash[T comparable, P any](fn func(k K, v V) (T, P)) map[T]P {
+	a.mux.RLock()
+	defer a.mux.RUnlock()
+	var result = make(map[T]P)
+	for k, v := range a.src {
+		t, p := fn(k, v)
+		result[t] = p
+	}
+	return result
 }
 
 func (a Hash[K, V]) Len() int {

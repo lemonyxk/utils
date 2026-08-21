@@ -11,6 +11,7 @@
 package hash
 
 import (
+	"maps"
 	"sort"
 	"sync"
 
@@ -43,6 +44,17 @@ func (a Hash[K, V]) Hash[T comparable, P any](fn func(k K, v V) (T, P)) map[T]P 
 	for k, v := range a.src {
 		t, p := fn(k, v)
 		result[t] = p
+	}
+	return result
+}
+
+func (a Hash[K, V]) CountMap[T comparable, P constraints.Number](fn func(k K, v V) (T, P)) map[T]P {
+	a.mux.RLock()
+	defer a.mux.RUnlock()
+	var result = make(map[T]P)
+	for k, v := range a.src {
+		t, p := fn(k, v)
+		result[t] += p
 	}
 	return result
 }
@@ -141,12 +153,8 @@ func (a Compare[K, V]) Union(src map[K]V) Compare[K, V] {
 	a.mux.RLock()
 	defer a.mux.RUnlock()
 	var result = make(map[K]V)
-	for k, v := range a.src {
-		result[k] = v
-	}
-	for k, v := range src {
-		result[k] = v
-	}
+	maps.Copy(result, a.src)
+	maps.Copy(result, src)
 	return Compare[K, V]{Hash[K, V]{src: result}}
 }
 

@@ -12,6 +12,8 @@ package slice
 
 import (
 	"sort"
+
+	"github.com/lemonyxk/utils/constraints"
 )
 
 type Slice[T ~[]E, E any] struct {
@@ -22,6 +24,15 @@ func (a Slice[T, E]) Map[P any](fn func(E) P) []P {
 	var res []P
 	for _, v := range a.src {
 		res = append(res, fn(v))
+	}
+	return res
+}
+
+func (a Slice[T, E]) CountMap[K comparable, P constraints.Number](fn func(E) (K, P)) map[K]P {
+	res := make(map[K]P)
+	for _, v := range a.src {
+		k, p := fn(v)
+		res[k] += p
 	}
 	return res
 }
